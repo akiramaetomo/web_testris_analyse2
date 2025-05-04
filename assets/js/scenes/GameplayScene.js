@@ -177,7 +177,7 @@ export default class GameplayScene extends Scene {
             ctx.font = '24px sans-serif';
             // GAME OVER の下に少しスペースをあけて表示
             ctx.fillText(
-                'Press M(BACK) to main',
+                'Press B(BACK) to main',
                 (this.cfg.COLS + 2) * BS / 2,
                 (this.cfg.ROWS + this.cfg.TOP_MARGIN + 1) * BS / 2 + 72
             );
