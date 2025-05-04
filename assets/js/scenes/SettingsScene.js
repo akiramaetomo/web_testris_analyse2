@@ -1,9 +1,8 @@
 import { Scene } from '../core/Scene.js';
 import { ACTIONS } from '../input/inputHandler.js';
-import { TitleScene } from './TitleScene.js';
 import { DROP_SPEED_LABELS } from '../GameConfig.js';
 
-export class SettingsScene extends Scene {
+export default class SettingsScene extends Scene {
     constructor() {
         super();
         this._cursor = 0;
@@ -31,7 +30,7 @@ export class SettingsScene extends Scene {
         // immediate key handling for returning to menu
         this._onKey = (e) => {
             if (e.key === 'c' || e.key === 'C' || e.key === 'Enter') {
-                this._mgr.changeTo(new TitleScene());
+                this._mgr.changeTo('title');
             }
         };
         window.addEventListener('keydown', this._onKey);
@@ -49,7 +48,7 @@ export class SettingsScene extends Scene {
     update(dt) {
         // Cキー/Enterキー or ゲームパッドのBackボタンでタイトルへ戻る
         if (window.input.isPressed(ACTIONS.BACK) || window.input.isPressed(ACTIONS.ENTER)) {
-            this._mgr.changeTo(new TitleScene());
+            this._mgr.changeTo('title');
             return;
         }
         const optCount = this.options.length;

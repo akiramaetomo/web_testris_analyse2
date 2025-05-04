@@ -2,14 +2,14 @@
 import { Scene } from '../core/Scene.js';
 import { ACTIONS } from '../input/inputHandler.js';  // ★ 追加
 import { soundManager } from '../audio/globalSoundManager.js'; // ←シングルトンで共有している想定
-import { GameplayScene } from './GameplayScene.js';
-import { SettingsScene } from './SettingsScene.js';
 import { EventBus } from '../utils/EventBus.js';
 
 
 //soundManager.play('bgm_title', { loop:true, bus:'bgm' });
 
-export class TitleScene extends Scene {
+export default class TitleScene extends Scene {
+
+    constructor(mgr) { super(); this._mgr = mgr; }   // ← mgr 受け取る
 
     enter() {
         console.log('[Scene] enter Title !!!!!');
@@ -19,7 +19,7 @@ export class TitleScene extends Scene {
         document.getElementById('gameCanvas').focus();
         // Add key listener for Settings
         this._onKey = (e) => {
-            if (e.key === 's' || e.key === 'S') this._mgr.changeTo(new SettingsScene());
+            if (e.key === 's' || e.key === 'S') this._mgr.changeTo('settings');
         };
         window.addEventListener('keydown', this._onKey);
     }
@@ -36,11 +36,11 @@ export class TitleScene extends Scene {
                 window.setInputDevice(window.desiredDevice);
                 delete window.desiredDevice;
             }
-            this._mgr.changeTo(new GameplayScene());
+            this._mgr.changeTo('gameplay');
         }
 
         if (window.input.isPressed(ACTIONS.BACK)) {
-            this._mgr.changeTo(new SettingsScene());
+            this._mgr.changeTo('settings');
             return;
         }
 

@@ -6,8 +6,8 @@
  * =======================================================*/
 import { GameConfig } from './GameConfig.js';
 import { Engine } from './core/Engine.js';
-import { SceneManager } from './core/SceneManager.js';
-import { TitleScene } from './scenes/TitleScene.js';
+import { SceneManager } from './scenes/SceneManager.js';
+import TitleScene from './scenes/TitleScene.js';
 
 // デバッグ用パフォーマンス計測
 import { PerfStats } from './utils/perfStats.js';
@@ -20,11 +20,11 @@ import { CombinedInputHandler } from './input/CombinedInputHandler.js';
 import { ACTIONS } from './input/inputHandler.js';
 import { AppInitializer } from './utils/AppInitializer.js';
 import { StatsManager } from './utils/StatsManager.js'; // 統計情報
-import { DisplayManager } from './utils/DisplayManager.js'; // 画面表示レンダラー　_oldとの違いは僅か？
+import { DisplayManager } from './utils/DisplayManager.js'; //画面表示レンダラー _oldとの違いは僅か？
 import { WallpaperController } from './utils/WallpaperController.js'; // 背景切替コントローラ
 import { BGMManager } from './utils/BGMManager.js'; // BGM 再生管理
 
-import { EventBus } from './utils/EventBus.js'//イベント　シングルトン
+import { EventBus } from './utils/EventBus.js'//イベント シングルトン
 
 // 入力ハンドラ初期化
 const input = new CombinedInputHandler();
@@ -35,7 +35,7 @@ const cfg = new GameConfig({ speedIndex: window.settingOptions?.['落下速度']
 const engine = new Engine('gameCanvas', cfg);
 const bgmManager = new BGMManager();
 window.bgmManager = bgmManager;
-const sceneMgr = new SceneManager(new TitleScene());
+const sceneMgr = new SceneManager('title');
 
 // infoArea レイアウト適用 (次ブロック領域幅に合わせる)
 const nextCanvasWidth = document.getElementById('nextCanvas').width;

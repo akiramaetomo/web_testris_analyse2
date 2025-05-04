@@ -5,7 +5,6 @@ import { GameState } from '../GameState.js';
 import { TETROMINOES } from '../tetrominoes.js';
 import { soundManager } from '../audio/globalSoundManager.js';
 import { ACTIONS } from '../input/inputHandler.js';
-import { TitleScene } from './TitleScene.js';
 import { EventBus } from '../utils/EventBus.js';
 import { StatsManager } from '../utils/StatsManager.js';
 
@@ -27,7 +26,7 @@ const SUB = Object.freeze({
     GAMEOVER: 'gameover'
 });
 
-export class GameplayScene extends Scene {
+export default class GameplayScene extends Scene {
 
     /* ===== コンストラクタ ===== */
     constructor() {
@@ -100,7 +99,7 @@ export class GameplayScene extends Scene {
         /* ゲームオーバー中にタイトルへ戻るキー */
         if (this.state.currentPhase === SUB.GAMEOVER &&
             window.input.isPressed(ACTIONS.BACK)) {
-            this._mgr.changeTo(new TitleScene());
+            this._mgr.changeTo('title');
             return;
         }
 
@@ -109,7 +108,7 @@ export class GameplayScene extends Scene {
             (window.input.isPressed(ACTIONS.RESTART) ||
                 window.input.isPressed(ACTIONS.START) ||
                 window.input.isPressed(ACTIONS.ENTER))) {
-            this._mgr.changeTo(new GameplayScene());
+            this._mgr.changeTo('gameplay');
             return;
         }
 
@@ -218,9 +217,6 @@ export class GameplayScene extends Scene {
         this.state.currentBlock.row = -this.cfg.TOP_MARGIN;
         this.state.currentBlock.col = Math.floor(this.cfg.COLS / 2 - 2);
         this.nextBlock = this.makeRandomBlock();
-        //this.state.landingTimer = null;
-        //        state.landed = false;         // 旧ソース　着地フラグをクリア
-        //        state.spawnTimer = null;      // 旧ソースでも未使用　出現待ちタイマー初期化
 
         /* 出現衝突＝ゲームオーバー */
         if (this.isCollision()) {
@@ -317,7 +313,7 @@ export class GameplayScene extends Scene {
 
         if (s.collapseState === 'fall') {
 
-            /* ① A ms 経過で 1 段コピー */
+            /* ① A ms 経過で 1 段コピー */
             while (cfg.LINE_STEP_FALL_TIME === 0 ||
                 s.collapseTimer >= cfg.LINE_STEP_FALL_TIME) {
 

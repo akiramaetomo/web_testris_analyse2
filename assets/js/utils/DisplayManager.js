@@ -1,5 +1,5 @@
 /* utils/DisplayManager.js */
-//o3でレンダリングについてCPU負荷を下げるよう最適化　らしい。
+//o3でレンダリングについてCPU負荷を下げるよう最適化,らしい。
 import { StatsManager } from './StatsManager.js';
 
 class ViewBase {
