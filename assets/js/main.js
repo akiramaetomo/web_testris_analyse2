@@ -1,13 +1,10 @@
 //Test-ris   2025-0412 ver 0.1  0428 ver 0.92 akiramaetomo
-
-
 /* =========================================================
  *  ゲーム起動処理
  * =======================================================*/
 import { GameConfig } from './GameConfig.js';
 import { Engine } from './core/Engine.js';
 import { SceneManager } from './scenes/SceneManager.js';
-import TitleScene from './scenes/TitleScene.js';
 
 // デバッグ用パフォーマンス計測
 import { PerfStats } from './utils/perfStats.js';
