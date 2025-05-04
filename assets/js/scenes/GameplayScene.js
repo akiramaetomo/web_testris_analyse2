@@ -2,7 +2,7 @@
 import { Scene } from '../core/Scene.js';
 import { GameConfig } from '../core/GameConfig.js';
 import { GameState } from '../core/GameState.js';
-import { TETROMINOES } from '../tetrominoes.js';
+import { TETROMINOES } from '../resources/tetrominoes.js';
 import { soundManager } from '../audio/globalSoundManager.js';
 import { ACTIONS } from '../input/inputHandler.js';
 import { EventBus } from '../utils/EventBus.js';
