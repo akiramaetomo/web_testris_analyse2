@@ -1,0 +1,18 @@
+{
+  "name": "web_testris_develop",
+  "version": "1.0.0",
+  "main": "extract_meta.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@babel/parser": "^7.27.1",
+    "@babel/traverse": "^7.27.1",
+    "graphology": "^0.26.0",
+    "graphology-communities-louvain": "^2.0.2"
+  }
+}
