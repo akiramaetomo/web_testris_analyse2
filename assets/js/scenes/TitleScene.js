@@ -55,6 +55,6 @@ export default class TitleScene extends Scene {
         ctx.fillText('■■■■■TeST-Ris■■■■■', ctx.canvas.width / 2, ctx.canvas.height / 2);
         ctx.font = '24px sans-serif';
         ctx.fillText('Press Enter(START) to start', ctx.canvas.width / 2, ctx.canvas.height / 2 + 40);
-        ctx.fillText('Press S(BACK) for Settings', ctx.canvas.width / 2, ctx.canvas.height / 2 + 80);
+        ctx.fillText('Press B(BACK) for Settings', ctx.canvas.width / 2, ctx.canvas.height / 2 + 80);
     }
 }

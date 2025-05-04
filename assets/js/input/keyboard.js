@@ -20,8 +20,8 @@ export class KeyboardInputHandler extends InputHandler {
             R: ACTIONS.RESTART,
             c: ACTIONS.BACK,
             C: ACTIONS.BACK,
-            m: ACTIONS.BACK,
-            M: ACTIONS.BACK
+            b: ACTIONS.BACK,
+            B: ACTIONS.BACK
         };
         window.addEventListener('keydown', e => {
             if (e.repeat) return;                 // ★ repeat を丸ごと無視

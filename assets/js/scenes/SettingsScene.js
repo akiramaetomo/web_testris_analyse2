@@ -75,7 +75,7 @@ export default class SettingsScene extends Scene {
         ctx.textAlign = 'left';
         ctx.fillText('Settings', 50, 40);
         ctx.font = '16px sans-serif';
-        ctx.fillText('Use ↑/↓ to move, ←/→ to change, C(BACK) to confirm', 50, 70);
+        ctx.fillText('Use ↑/↓ to move, ←/→ to change, B(BACK) to main', 50, 70);
 
         const startY = 110;
         const lineHeight = 30;
