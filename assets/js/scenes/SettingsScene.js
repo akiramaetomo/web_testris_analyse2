@@ -1,6 +1,6 @@
 import { Scene } from '../core/Scene.js';
 import { ACTIONS } from '../input/inputHandler.js';
-import { DROP_SPEED_LABELS } from '../GameConfig.js';
+import { DROP_SPEED_LABELS } from '../core/GameConfig.js';
 
 export default class SettingsScene extends Scene {
     constructor() {

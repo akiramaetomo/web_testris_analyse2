@@ -6,9 +6,10 @@ export class SceneManager {
     /**
      * @param {Scene} initialSceneNameOrInstance  最初に表示するシーン
      */
-    constructor(initialSceneNameOrInstance) {
+    constructor(initialScene, appRoot) {
         this._stack = [];
-        this.changeTo(initialSceneNameOrInstance);
+        this.app = appRoot;        // ★ AppRoot を保持
+        this.changeTo(initialScene);
     }
 
     /** 現在のシーンを置き換える */

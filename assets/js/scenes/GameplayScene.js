@@ -1,7 +1,7 @@
 // scenes/GameplayScene.js  ── 完全 FSM 移植版
 import { Scene } from '../core/Scene.js';
-import { GameConfig } from '../GameConfig.js';
-import { GameState } from '../GameState.js';
+import { GameConfig } from '../core/GameConfig.js';
+import { GameState } from '../core/GameState.js';
 import { TETROMINOES } from '../tetrominoes.js';
 import { soundManager } from '../audio/globalSoundManager.js';
 import { ACTIONS } from '../input/inputHandler.js';

@@ -1,9 +1,8 @@
 // scenes/TitleScene.js
 import { Scene } from '../core/Scene.js';
 import { ACTIONS } from '../input/inputHandler.js';  // ★ 追加
-import { soundManager } from '../audio/globalSoundManager.js'; // ←シングルトンで共有している想定
+//import { soundManager } from '../audio/globalSoundManager.js'; // ←シングルトンで共有している想定
 import { EventBus } from '../utils/EventBus.js';
-
 
 //soundManager.play('bgm_title', { loop:true, bus:'bgm' });
 
@@ -15,7 +14,7 @@ export default class TitleScene extends Scene {
         console.log('[Scene] enter Title !!!!!');
         EventBus.emit('phaseChanged', 'title');
         // メニュー画面用 BGM 再生
-        window.bgmManager.play('bgm_init');
+        this._mgr.app.bgm.play('bgm_init');
         document.getElementById('gameCanvas').focus();
         // Add key listener for Settings
         this._onKey = (e) => {

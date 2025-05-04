@@ -12,7 +12,7 @@
  *   - switch()
  *   - stop()
  */
-import { soundManager } from '../audio/globalSoundManager.js';
+import { soundManager } from './globalSoundManager.js';
 
 export class BGMManager {
     constructor() {
