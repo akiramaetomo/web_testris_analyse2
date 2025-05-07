@@ -186,5 +186,4 @@ export class AppRoot {
 /* シングルトンとして公開（旧 window.bgmManager などの互換維持用） */
 export const app = new AppRoot();
 window.app = app;
-//window.bgmManager = app.bgm;        // 旧参照が残っていても動くように
-window.engine = app.engine;     // 必要に応じて追加
+//window.engine = app.engine;     // 必要に応じて追加
