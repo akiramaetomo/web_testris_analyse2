@@ -41,6 +41,8 @@ export default class SettingsScene extends Scene {
         this.options.forEach(opt => {
             window.settingOptions[opt.label] = opt.selected;
         });
+        // Apply updated settings to game
+        window.app.reconfigure();
         window.removeEventListener('keydown', this._onKey);
     }
 

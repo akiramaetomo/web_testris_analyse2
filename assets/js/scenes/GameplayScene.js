@@ -30,24 +30,13 @@ const SUB = Object.freeze({
 export default class GameplayScene extends Scene {
 
     /* ===== コンストラクタ ===== */
-    constructor() {
+    constructor(mgr) {
         super();
+        this._mgr = mgr;
         StatsManager.reset();
-        // フィールドサイズ選択を反映する設定オーバーライド
-        const overrides = { speedIndex: window.settingOptions?.['落下速度'] };
-        const fieldIndex = window.settingOptions?.['フィールド'];
-        const fieldSizes = [
-            { COLS: 10, ROWS: 20 },
-            { COLS: 15, ROWS: 30 },
-            { COLS: 20, ROWS: 40 }
-        ];
-        if (typeof fieldIndex === 'number' && fieldSizes[fieldIndex]) {
-            Object.assign(overrides, fieldSizes[fieldIndex]);
-        }
-        this.cfg = new GameConfig(overrides);
+        this.cfg = this._mgr.app.gameConfig;
         this.state = new GameState(this.cfg);
-        this.field = Array.from({ length: this.cfg.ROWS },
-            () => Array(this.cfg.COLS).fill(0));
+        this.field = Array.from({ length: this.cfg.ROWS }, () => Array(this.cfg.COLS).fill(0));
 
         /* Next / Current ブロック */
         this.nextBlock = this.makeRandomBlock();
@@ -65,17 +54,7 @@ export default class GameplayScene extends Scene {
     enter() {
         soundManager.resumeContext();
         window.bgmManager.switch('bgm_play');
-        // Canvasサイズを設定に合わせて再設定
-        const engine = this._mgr.app.engine;
-        const canvas = engine.canvas;
-        const BS = this.cfg.BLOCK_SIZE;
-        const width = (this.cfg.COLS + 2) * BS;
-        const height = (this.cfg.TOP_MARGIN + this.cfg.ROWS + 1) * BS;
-        canvas.width = width;
-        canvas.height = height;
-        engine.width = width;
-        engine.height = height;
-        document.getElementById('statsArea').style.height = `${height}px`;
+
         // Delay before gameplay starts
         this._startDelay = 1000; // milliseconds
         this.state.currentPhase = SUB.PENDING_START;
