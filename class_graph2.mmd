@@ -1,0 +1,77 @@
+%% Generated from generate_class_graph.js %%
+%%{init:{"flowchart":{"ranker":"tight-tree","nodeSpacing":100,"rankSpacing":70}}}%%
+flowchart TB
+  subgraph cluster_0["assets/js"]
+    AppRoot
+  end
+  subgraph cluster_1["assets/js/audio"]
+    BGMManager
+    SoundManager
+  end
+  subgraph cluster_2["assets/js/input"]
+    CombinedInputHandler
+    GamepadInputHandler
+    InputHandler
+    KeyboardInputHandler
+  end
+  subgraph cluster_3["assets/js/core"]
+    Engine
+    GameConfig
+    GameState
+    Scene
+    Scene_dummy
+  end
+  subgraph cluster_4["assets/js/scenes"]
+    GameplayScene
+    SceneFactory
+    SceneManager
+    SettingsScene
+    TitleScene
+  end
+  subgraph cluster_5["assets/js/utils"]
+    AppInitializer
+    ViewBase
+    StatsView
+    DebugView
+    DisplayManager
+    EventBusClass
+    MenuController
+    PerfStats
+    StatsManagerClass
+    WallpaperController
+  end
+  CombinedInputHandler -->|extends| InputHandler
+  GamepadInputHandler -->|extends| InputHandler
+  KeyboardInputHandler -->|extends| InputHandler
+  GameplayScene -->|extends| Scene
+  SettingsScene -->|extends| Scene
+  TitleScene -->|extends| Scene
+  StatsView -->|extends| ViewBase
+  DebugView -->|extends| ViewBase
+  AppRoot -->|instantiates| BGMManager
+  AppRoot -->|instantiates| CombinedInputHandler
+  AppRoot -->|instantiates| GameConfig
+  AppRoot -->|instantiates| Engine
+  AppRoot -->|instantiates| SceneFactory
+  AppRoot -->|instantiates| SceneManager
+  AppRoot -->|instantiates| PerfStats
+  AppRoot -->|instantiates| DisplayManager
+  AppRoot -->|instantiates| WallpaperController
+  AppRoot -->|instantiates| AppInitializer
+  CombinedInputHandler -->|instantiates| KeyboardInputHandler
+  CombinedInputHandler -->|instantiates| GamepadInputHandler
+  GameplayScene -->|instantiates| GameConfig
+  GameplayScene -->|instantiates| GameState
+  SceneFactory -->|instantiates| TitleScene
+  SceneFactory -->|instantiates| GameplayScene
+  SceneFactory -->|instantiates| SettingsScene
+  DisplayManager -->|instantiates| StatsView
+  DisplayManager -->|instantiates| DebugView
+linkStyle 0 stroke:red,stroke-width:2px
+linkStyle 1 stroke:red,stroke-width:2px
+linkStyle 2 stroke:red,stroke-width:2px
+linkStyle 3 stroke:red,stroke-width:2px
+linkStyle 4 stroke:red,stroke-width:2px
+linkStyle 5 stroke:red,stroke-width:2px
+linkStyle 6 stroke:red,stroke-width:2px
+linkStyle 7 stroke:red,stroke-width:2px

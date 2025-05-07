@@ -1,87 +1,53 @@
+%% Generated from extract_meta6.js %%
 %%{init:{"flowchart":{"ranker":"tight-tree","nodeSpacing":100,"rankSpacing":70}}}%%
 flowchart TB
-  %% サブグラフ --------------------------------------------------------
-  subgraph cluster_0[assets/js]
+  subgraph cluster_0
     AppRoot
-  end
-  subgraph cluster_1[assets/js/audio]
     BGMManager
+    SceneManager
+    AppInitializer
+    PerfStats
+  end
+  subgraph cluster_1
     SoundManager
+    EventBusClass
+    StatsManagerClass
+    WallpaperController
+    Set
+    Image
   end
-  subgraph cluster_2[assets/js/input]
-    CombinedInputHandler
-    GamepadInputHandler
-    InputHandler
-    KeyboardInputHandler
-  end
-  subgraph cluster_3[assets/js/core]
+  subgraph cluster_2
     Engine
     GameConfig
     GameState
     Scene
-    Scene_dummy
-  end
-  subgraph cluster_4[assets/js/scenes]
     GameplayScene
     SceneFactory
-    SceneManager
     SettingsScene
     TitleScene
+    Error
   end
-  subgraph cluster_5[assets/js/utils]
-    AppInitializer
+  subgraph cluster_3
+    Scene_dummy
+  end
+  subgraph cluster_4
+    CombinedInputHandler
+    GamepadInputHandler
+    InputHandler
+    KeyboardInputHandler
+    TypeError
+  end
+  subgraph cluster_5
     ViewBase
     StatsView
     DebugView
     DisplayManager
-    EventBusClass
-    MenuController
-    PerfStats
-    StatsManagerClass
-    WallpaperController
   end
-
-  %% 通常依存関係 ------------------------------------------------------
-  AppRoot --> GameConfig
-  AppRoot --> Engine
-  AppRoot --> SceneManager
-  AppRoot --> SceneFactory
-  AppRoot --> CombinedInputHandler
-  AppRoot --> BGMManager
-  AppRoot --> DisplayManager
-  AppRoot --> WallpaperController
-  AppRoot --> PerfStats
-  AppRoot --> AppInitializer
-
-  CombinedInputHandler --> InputHandler
-  CombinedInputHandler --> KeyboardInputHandler
-  CombinedInputHandler --> GamepadInputHandler
-  GamepadInputHandler --> InputHandler
-  KeyboardInputHandler --> InputHandler
-  Engine --> GameConfig
-
-  GameplayScene --> Scene
-  GameplayScene --> GameConfig
-  GameplayScene --> GameState
-
-  SceneFactory --> TitleScene
-  SceneFactory --> GameplayScene
-  SceneFactory --> SettingsScene
-
-  SettingsScene --> Scene
-  TitleScene --> Scene
-
-  %% 「extends」関係（flowchart 版）
-  CombinedInputHandler -->|extends| InputHandler
-  GamepadInputHandler -->|extends| InputHandler
-  KeyboardInputHandler -->|extends| InputHandler
-  GameplayScene -->|extends| Scene
-  SettingsScene -->|extends| Scene
-  TitleScene -->|extends| Scene
-  StatsView -->|extends| ViewBase
-  DebugView -->|extends| ViewBase
-
-  %% 「instantiates」関係
+  subgraph cluster_6
+    MenuController
+  end
+  classDef globalNode font-weight:bold,color:#888;
+  class Global globalNode;
   AppRoot -->|instantiates| BGMManager
   AppRoot -->|instantiates| CombinedInputHandler
   AppRoot -->|instantiates| GameConfig
@@ -92,13 +58,34 @@ flowchart TB
   AppRoot -->|instantiates| DisplayManager
   AppRoot -->|instantiates| WallpaperController
   AppRoot -->|instantiates| AppInitializer
-
+  Engine -->|instantiates| Error
+  InputHandler -->|extends| CombinedInputHandler
   CombinedInputHandler -->|instantiates| KeyboardInputHandler
   CombinedInputHandler -->|instantiates| GamepadInputHandler
+  InputHandler -->|extends| GamepadInputHandler
+  InputHandler -->|instantiates| TypeError
+  InputHandler -->|instantiates| Set
+  InputHandler -->|instantiates| Error
+  InputHandler -->|extends| KeyboardInputHandler
+  Scene -->|extends| GameplayScene
   GameplayScene -->|instantiates| GameConfig
   GameplayScene -->|instantiates| GameState
   SceneFactory -->|instantiates| TitleScene
   SceneFactory -->|instantiates| GameplayScene
   SceneFactory -->|instantiates| SettingsScene
+  SceneFactory -->|instantiates| Error
+  Scene -->|extends| SettingsScene
+  Scene -->|extends| TitleScene
+  ViewBase -->|extends| StatsView
+  ViewBase -->|extends| DebugView
   DisplayManager -->|instantiates| StatsView
   DisplayManager -->|instantiates| DebugView
+  WallpaperController -->|instantiates| Image
+  linkStyle 11 stroke:#d33,stroke-width:2px,color:#d33
+  linkStyle 14 stroke:#d33,stroke-width:2px,color:#d33
+  linkStyle 18 stroke:#d33,stroke-width:2px,color:#d33
+  linkStyle 19 stroke:#d33,stroke-width:2px,color:#d33
+  linkStyle 26 stroke:#d33,stroke-width:2px,color:#d33
+  linkStyle 27 stroke:#d33,stroke-width:2px,color:#d33
+  linkStyle 28 stroke:#d33,stroke-width:2px,color:#d33
+  linkStyle 29 stroke:#d33,stroke-width:2px,color:#d33

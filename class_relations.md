@@ -3,6 +3,7 @@
 | eslint.config.js | @eslint/js, eslint-plugin-import |  |  |
 | extract_meta5.js |  |  |  |
 | extract_meta6.js |  |  |  |
+| generate_class_graph.js |  |  |  |
 | assets/js/AppRoot.js | ./core/GameConfig.js, ./core/Engine.js, ./scenes/SceneManager.js, ./scenes/SceneFactory.js, ./input/CombinedInputHandler.js, ./input/inputHandler.js, ./audio/globalSoundManager.js, ./audio/BGMManager.js, ./utils/StatsManager.js, ./utils/DisplayManager.js, ./utils/WallpaperController.js, ./utils/perfStats.js, ./utils/AppInitializer.js, ./utils/EventBus.js | AppRoot |  |
 | assets/js/audio/BGMManager.js | ./globalSoundManager.js | BGMManager |  |
 | assets/js/audio/globalSoundManager.js | ./soundManager.js |  |  |

@@ -196,8 +196,15 @@ if (omitGlobal) {
  * @returns {string}  Mermaid 記法（コードフェンスなし）
  */
 function buildMermaid(recs, { direction = 'TB', omitGlobal = true, stackClusters = false } = {}) {
-    let m = '%%{init:{"flowchart":{"ranker":"tight-tree","nodeSpacing":100,"rankSpacing":100}}}%%\n';
-    m += `flowchart ${direction}\n`;
+    //    let m = '%%{init:{"flowchart":{"ranker":"tight-tree","nodeSpacing":100,"rankSpacing":100}}}%%\n';
+    //    m += `flowchart ${direction}\n`;
+
+    const path = require('path');
+    const filename = path.basename(__filename);
+    let m = `%% Generated from ${filename} %%\n`;
+    m += '%%{init:{"flowchart":{"ranker":"tight-tree","nodeSpacing":100,"rankSpacing":70}}}%%\n';
+    m += 'flowchart TB\n';
+
 
     // --- クラスタ (subgraph) ---
     Object.entries(clusterMap).forEach(([cid, nodes]) => {
