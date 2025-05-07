@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* ====================================================================
  *  AppRoot.js  ―  “アプリ唯一の組み立てクラス”
  * ==================================================================*/
@@ -35,6 +36,15 @@ export class AppRoot {
 
         /* 設定 & エンジン */
         const cfgObj = { speedIndex: window.settingOptions?.['落下速度'] };
+        const fieldIndex = window.settingOptions?.['フィールド'];
+        const fieldSizes = [
+            { COLS: 10, ROWS: 20 },
+            { COLS: 15, ROWS: 30 },
+            { COLS: 20, ROWS: 40 }
+        ];
+        if (typeof fieldIndex === 'number' && fieldSizes[fieldIndex]) {
+            Object.assign(cfgObj, fieldSizes[fieldIndex]);
+        }
         this.gameConfig = new GameConfig(cfgObj);
         this.engine = new Engine('gameCanvas', this.gameConfig);
 
