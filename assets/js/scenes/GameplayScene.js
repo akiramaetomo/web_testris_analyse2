@@ -8,7 +8,7 @@ import { ACTIONS } from '../input/inputHandler.js';
 import { EventBus } from '../utils/EventBus.js';
 import { StatsManager } from '../utils/StatsManager.js';
 
-import { leftWallImg, rightWallImg, topWallImg, downWallImg } from '../wallImages.js';
+import { leftWallImg, rightWallImg, topWallImg, downWallImg } from '../resources/wallImages.js';
 
 const OPTIONS = {
     hardTopWall: true   // false にすれば旧仕様（めり込み可）

@@ -4,7 +4,7 @@
 import { GameConfig } from './core/GameConfig.js';
 import { Engine } from './core/Engine.js';
 import { SceneManager } from './scenes/SceneManager.js';
-import { createScene } from './scenes/SceneFactory.js';
+import { SceneFactory } from './scenes/SceneFactory.js';
 
 import { CombinedInputHandler } from './input/CombinedInputHandler.js';
 import { ACTIONS } from './input/inputHandler.js';
@@ -39,12 +39,17 @@ export class AppRoot {
         this.engine = new Engine('gameCanvas', this.gameConfig);
 
         /* シーンマネージャ */
-        this.scenes = new SceneManager(createScene('title', null), this);
+        const sceneFactory = new SceneFactory();
+        // SceneFactory クラスのインスタンスメソッド `createScene` を、
+        // そのインスタンス (`sceneFactory`) に束縛（bind）して関数化
+        // `bind` しないと、`this` が失われて正しく動作しないため必須
+        //第一引数をclass受けする方法もあるがひとまずこのまま。mae
+        this.scenes = new SceneManager(sceneFactory.createScene.bind(sceneFactory), 'title', this);
 
         /* サウンド */
         this.sound = soundManager;               // globalSoundManager.js で export 済
-        //    this.bgm        = new BGMManager();           // ★ 引数なしコンストラクタ
-        //    window.bgmManager = this.bgm;        // ★ ここで即公開（SceneManager 作成より前）
+        //            this.bgm        = new BGMManager();           // ★ 引数なしコンストラクタ
+        //            window.bgmManager = this.bgm;        // ★ ここで即公開（SceneManager 作成より前）
 
         /* 統計・表示・壁紙 */
         this.statsMgr = StatsManager;

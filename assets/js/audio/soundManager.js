@@ -1,4 +1,21 @@
 // soundManager.js  2025-04-26 rev.1
+/**
+ * @file soundManager.js
+ * @module SoundManager
+ *
+ * @class SoundManager
+ * @classdesc
+ *   オーディオの読み込み・再生・停止・ボリューム制御を行うクラス。
+ *   Web Audio API をラップし、BGM／効果音のバス分け、ポリフォニック制御、
+ *   フェードイン・フェードアウトなどのユーティリティを提供する。
+ *
+ * @example
+ * import { SoundManager } from './soundManager.js';
+ * const sm = new SoundManager();
+ * await sm.loadAllSounds({ drop: 'drop.wav', bgm: 'bgm.mp3' });
+ * sm.play('bgm', { loop: true, volume: 0.5, bus: 'bgm' });
+ */
+
 export class SoundManager {
     constructor() {
         /* ---------- 基本 ---------- */

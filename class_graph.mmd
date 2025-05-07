@@ -1,0 +1,104 @@
+%%{init:{"flowchart":{"ranker":"tight-tree","nodeSpacing":100,"rankSpacing":70}}}%%
+flowchart TB
+  %% サブグラフ --------------------------------------------------------
+  subgraph cluster_0[assets/js]
+    AppRoot
+  end
+  subgraph cluster_1[assets/js/audio]
+    BGMManager
+    SoundManager
+  end
+  subgraph cluster_2[assets/js/input]
+    CombinedInputHandler
+    GamepadInputHandler
+    InputHandler
+    KeyboardInputHandler
+  end
+  subgraph cluster_3[assets/js/core]
+    Engine
+    GameConfig
+    GameState
+    Scene
+    Scene_dummy
+  end
+  subgraph cluster_4[assets/js/scenes]
+    GameplayScene
+    SceneFactory
+    SceneManager
+    SettingsScene
+    TitleScene
+  end
+  subgraph cluster_5[assets/js/utils]
+    AppInitializer
+    ViewBase
+    StatsView
+    DebugView
+    DisplayManager
+    EventBusClass
+    MenuController
+    PerfStats
+    StatsManagerClass
+    WallpaperController
+  end
+
+  %% 通常依存関係 ------------------------------------------------------
+  AppRoot --> GameConfig
+  AppRoot --> Engine
+  AppRoot --> SceneManager
+  AppRoot --> SceneFactory
+  AppRoot --> CombinedInputHandler
+  AppRoot --> BGMManager
+  AppRoot --> DisplayManager
+  AppRoot --> WallpaperController
+  AppRoot --> PerfStats
+  AppRoot --> AppInitializer
+
+  CombinedInputHandler --> InputHandler
+  CombinedInputHandler --> KeyboardInputHandler
+  CombinedInputHandler --> GamepadInputHandler
+  GamepadInputHandler --> InputHandler
+  KeyboardInputHandler --> InputHandler
+  Engine --> GameConfig
+
+  GameplayScene --> Scene
+  GameplayScene --> GameConfig
+  GameplayScene --> GameState
+
+  SceneFactory --> TitleScene
+  SceneFactory --> GameplayScene
+  SceneFactory --> SettingsScene
+
+  SettingsScene --> Scene
+  TitleScene --> Scene
+
+  %% 「extends」関係（flowchart 版）
+  CombinedInputHandler -->|extends| InputHandler
+  GamepadInputHandler -->|extends| InputHandler
+  KeyboardInputHandler -->|extends| InputHandler
+  GameplayScene -->|extends| Scene
+  SettingsScene -->|extends| Scene
+  TitleScene -->|extends| Scene
+  StatsView -->|extends| ViewBase
+  DebugView -->|extends| ViewBase
+
+  %% 「instantiates」関係
+  AppRoot -->|instantiates| BGMManager
+  AppRoot -->|instantiates| CombinedInputHandler
+  AppRoot -->|instantiates| GameConfig
+  AppRoot -->|instantiates| Engine
+  AppRoot -->|instantiates| SceneFactory
+  AppRoot -->|instantiates| SceneManager
+  AppRoot -->|instantiates| PerfStats
+  AppRoot -->|instantiates| DisplayManager
+  AppRoot -->|instantiates| WallpaperController
+  AppRoot -->|instantiates| AppInitializer
+
+  CombinedInputHandler -->|instantiates| KeyboardInputHandler
+  CombinedInputHandler -->|instantiates| GamepadInputHandler
+  GameplayScene -->|instantiates| GameConfig
+  GameplayScene -->|instantiates| GameState
+  SceneFactory -->|instantiates| TitleScene
+  SceneFactory -->|instantiates| GameplayScene
+  SceneFactory -->|instantiates| SettingsScene
+  DisplayManager -->|instantiates| StatsView
+  DisplayManager -->|instantiates| DebugView
