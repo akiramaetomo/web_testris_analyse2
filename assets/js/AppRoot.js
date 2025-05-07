@@ -23,8 +23,8 @@ export class AppRoot {
     constructor() {
         /* ---------------- 1. 生成フェーズ ---------------- */
         /* ★ ここで先に bgm を作り window に出しておく */
-        this.bgm = new BGMManager();
-        window.bgmManager = this.bgm;
+        this.bgmMgr = new BGMManager();
+        window.bgmManager = this.bgmMgr;
 
 
         this.eventBus = EventBus;                      // 既存シングルトンを転用
@@ -47,7 +47,7 @@ export class AppRoot {
         this.scenes = new SceneManager(sceneFactory.createScene.bind(sceneFactory), 'title', this);
 
         /* サウンド */
-        this.sound = soundManager;               // globalSoundManager.js で export 済
+        this.soundMgr = soundManager;               // globalSoundManager.js で export 済
         //            this.bgm        = new BGMManager();           // ★ 引数なしコンストラクタ
         //            window.bgmManager = this.bgm;        // ★ ここで即公開（SceneManager 作成より前）
 
@@ -76,7 +76,7 @@ export class AppRoot {
     _registerInitTasks(statsEl, infoEl) {
         /* 1) サウンドロード */
         this.initTasks.register('LoadSounds', async () => {
-            await this.sound.loadAllSounds({
+            await this.soundMgr.loadAllSounds({
                 move: './assets/audio/move.wav',
                 rotate: './assets/audio/rotate.wav',
                 land: './assets/audio/land.wav',
@@ -87,7 +87,7 @@ export class AppRoot {
                 bgm_over: './assets/audio/bgm_over.wav',
                 se_over: './assets/audio/se_over.wav'
             });
-            this.sound.setVolume({ master: 0.1, sfx: 0.2, bgm: 0.2 });
+            this.soundMgr.setVolume({ master: 0.3, sfx: 0.3, bgm: 0.3 });
         });
 
         /* 2) StatsManager 初期化 */
@@ -107,12 +107,12 @@ export class AppRoot {
 
         /* 5) BGMManager 初期化 */
         this.initTasks.register('InitBGMManager', async () => {
-            await this.bgm.init({
+            await this.bgmMgr.init({
                 bgm_init: './assets/audio/bgm_init.wav',
                 bgm_play: './assets/audio/bgm_play.wav',
                 bgm_over: './assets/audio/bgm_over.wav'
             });
-            this.bgm.play('bgm_init', { loop: true });
+            this.bgmMgr.play('bgm_init', { loop: true });
         });
     }
 

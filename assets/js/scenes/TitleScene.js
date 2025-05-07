@@ -14,7 +14,7 @@ export default class TitleScene extends Scene {
         console.log('[Scene] enter Title !!!!!');
         EventBus.emit('phaseChanged', 'title');
         // メニュー画面用 BGM 再生
-        this._mgr.app.bgm.play('bgm_init');
+        this._mgr.app.bgmMgr.play('bgm_init');
         document.getElementById('gameCanvas').focus();
         // Add key listener for Settings
         this._onKey = (e) => {
