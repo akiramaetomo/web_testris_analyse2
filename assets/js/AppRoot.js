@@ -6,6 +6,7 @@ import { GameConfig } from './core/GameConfig.js';
 import { Engine } from './core/Engine.js';
 import { SceneManager } from './scenes/SceneManager.js';
 import { SceneFactory } from './scenes/SceneFactory.js';
+import { SOUND_PATHS, BGM_PATHS } from './config/settingDefinitions.js';
 
 import { CombinedInputHandler } from './input/CombinedInputHandler.js';
 import { ACTIONS } from './input/inputHandler.js';
@@ -27,13 +28,15 @@ export class AppRoot {
         this.bgmMgr = new BGMManager();
         window.bgmManager = this.bgmMgr;
 
-
+        /* サウンド */
+        this.soundMgr = soundManager;               // globalSoundManager.js で export 済
         this.eventBus = EventBus;                      // 既存シングルトンを転用
 
         /* 入力 */
         this.input = new CombinedInputHandler();
         window.input = this.input;                     // 既存コード互換のため暫定公開
 
+        //コンフィグ
         this.gameConfig = new GameConfig();         //デフォルト値の設定
         this.engine = new Engine('gameCanvas', this.gameConfig);
 
@@ -45,15 +48,13 @@ export class AppRoot {
         //第一引数をclass受けする方法もあるがひとまずこのまま。mae
         this.scenes = new SceneManager(sceneFactory.createScene.bind(sceneFactory), 'title', this);
 
-        /* サウンド */
-        this.soundMgr = soundManager;               // globalSoundManager.js で export 済
-        //            this.bgm        = new BGMManager();           // ★ 引数なしコンストラクタ
-        //            window.bgmManager = this.bgm;        // ★ ここで即公開（SceneManager 作成より前）
-
         /* 統計・表示・壁紙 */
         this.statsMgr = StatsManager;
+
+        //処理負荷計測
         this.perfStats = new PerfStats({ enabled: true, interval: 1000, keyToggle: 'F3' });
 
+        //描画キャンバスのサイズ設定
         const nextW = document.getElementById('nextCanvas').width;
         const statsEl = document.getElementById('statsArea');
         const infoEl = document.getElementById('infoArea');
@@ -73,46 +74,35 @@ export class AppRoot {
 
     /** 非同期初期化タスクの登録 */
     _registerInitTasks(statsEl, infoEl) {
-        /* 1) サウンドロード */
+        /* SEサウンドロード */
         this.initTasks.register('LoadSounds', async () => {
-            await this.soundMgr.loadAllSounds({
-                move: './assets/audio/move.wav',
-                rotate: './assets/audio/rotate.wav',
-                land: './assets/audio/land.wav',
-                fix: './assets/audio/fix.wav',
-                clear: './assets/audio/clear.wav',
-                drop: './assets/audio/drop.wav',
-                bgm_play: './assets/audio/bgm_play.wav',
-                bgm_over: './assets/audio/bgm_over.wav',
-                se_over: './assets/audio/se_over.wav'
-            });
+            await this.soundMgr.loadAllSounds(SOUND_PATHS);
             this.soundMgr.setVolume({ master: 0.3, sfx: 0.3, bgm: 0.3 });
         });
 
-        /* 2) StatsManager 初期化 */
+        /* BGMManager 初期化 */
+        this.initTasks.register('InitBGMManager', async () => {
+            await this.bgmMgr.init(BGM_PATHS);
+            this.bgmMgr.play('bgm_init', { loop: true });
+        });
+
+        /* StatsManager 初期化 */
         this.initTasks.register('InitStatsManager', async () => {
             this.statsMgr.init();
         });
 
-        /* 3) DisplayManager 初期化 */
+        /* DisplayManager 初期化 */
         this.initTasks.register('InitDisplayManager', async () => {
             this.displayMgr.init?.();                    // init() がある場合だけ
         });
 
-        /* 4) Wallpaper 初期化 */
+        /* Wallpaper 初期化 */
         this.initTasks.register('InitWallpaper', async () => {
             await this.wallpaper.init();
         });
 
-        /* 5) BGMManager 初期化 */
-        this.initTasks.register('InitBGMManager', async () => {
-            await this.bgmMgr.init({
-                bgm_init: './assets/audio/bgm_init.wav',
-                bgm_play: './assets/audio/bgm_play.wav',
-                bgm_over: './assets/audio/bgm_over.wav'
-            });
-            this.bgmMgr.play('bgm_init', { loop: true });
-        });
+
+
     }
 
     /**

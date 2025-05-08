@@ -53,17 +53,19 @@ export default class GameplayScene extends Scene {
     /* ===== Scene ライフサイクル ===== */
     enter() {
         soundManager.resumeContext();
-//        window.bgmManager.switch('bgm_play');
+        //        window.bgmManager.switch('bgm_play');
 
         // 設定画面で選んだ BGM キーを取得して再生
-        const bgmKey = this.cfg.bgm;  
+        const bgmKey = this.cfg.bgm;
         window.bgmManager.switch(bgmKey);
-    
+
         // Delay before gameplay starts
-        this._startDelay = 1000; // milliseconds
+        this._startDelay = 1800; // milliseconds
         this.state.currentPhase = SUB.PENDING_START;
+        EventBus.emit('phaseChanged', 'playing');
+
     }
-    exit() { soundManager.fadeOutBgm(800); }
+    exit() { soundManager.fadeOutBgm(500); }
 
     /* ===== メイン update ===== */
     update(dt) {
@@ -73,7 +75,6 @@ export default class GameplayScene extends Scene {
             if (this._startDelay <= 0) {
                 this._startDelay = null;
                 this.state.currentPhase = SUB.PLAYING;
-                EventBus.emit('phaseChanged', 'playing');
             }
             return;
         }
@@ -160,7 +161,7 @@ export default class GameplayScene extends Scene {
 
             // 赤文字で GAME OVER
             ctx.fillStyle = 'red';
-            ctx.font = 'bold 48px sans-serif';
+            ctx.font = 'bold 64px sans-serif';
             ctx.textAlign = 'center';
             ctx.fillText(
                 'GAME OVER',
@@ -170,7 +171,7 @@ export default class GameplayScene extends Scene {
 
             // 半分のサイズ（24px）の白文字で再開メッセージ
             ctx.fillStyle = 'white';
-            ctx.font = '24px sans-serif';
+            ctx.font = '28px cursive';
             // GAME OVER の下に少しスペースをあけて表示
             ctx.fillText(
                 'Press R(START) to restart',
@@ -180,7 +181,7 @@ export default class GameplayScene extends Scene {
 
             // 半分のサイズ（24px）の白文字で再開メッセージ
             ctx.fillStyle = 'white';
-            ctx.font = '24px sans-serif';
+            ctx.font = '28px cursive';
             // GAME OVER の下に少しスペースをあけて表示
             ctx.fillText(
                 'Press B(BACK) to main',
@@ -385,14 +386,14 @@ export default class GameplayScene extends Scene {
         if (this._gameoverDelay <= 0 && !this._hasPlayedOverSE) {
             this._hasPlayedOverSE = true;       // 一度きり
             this._gameoverDelay = null;         // 二度と入らないようにガード
-            soundManager.play('se_over');       // 一度だけ SE 再生
+            soundManager.play('se_over',{volume:0.4});       // 一度だけ SE 再生
+            soundManager.fadeOutBgm(0);
             // BGM 切り替え
             setTimeout(() => {
-                soundManager.fadeOutBgm(500);
-                soundManager.play('bgm_over', { bus: 'bgm' });
+                soundManager.play('bgm_over', { bus: 'bgm' ,volume:0.6});
                 this.state.currentPhase = SUB.GAMEOVER;
                 EventBus.emit('phaseChanged', 'gameover');
-            },   1000); /* SE の長さをmsで指定 */
+            }, 1800); /* overまでの長さ[ms] */
         }
     }
 
@@ -530,7 +531,8 @@ export default class GameplayScene extends Scene {
                 if (b.shape[r][c]) {
                     nx.fillStyle = b.color;
                     nx.fillRect(c * BS, r * BS, BS, BS);
-                    nx.strokeStyle = 'lightgray';
+                    nx.strokeStyle = 'black';//ブロックの境界線：色
+                    nx.lineWidth=2;        //ブロックの境界線：幅
                     nx.strokeRect(c * BS, r * BS, BS, BS);
                 }
     }
@@ -541,8 +543,11 @@ export default class GameplayScene extends Scene {
     /* 壁+ブロック描画ヘルパ */
     drawBlock(ctx, c, r, color) {
         const x = (c + 1) * this.BS, y = (r + this.cfg.TOP_MARGIN) * this.BS;
-        ctx.fillStyle = color; ctx.fillRect(x, y, this.BS, this.BS);
-        ctx.strokeStyle = 'lightgray'; ctx.strokeRect(x, y, this.BS, this.BS);
+        ctx.fillStyle = color;
+        ctx.fillRect(x, y, this.BS, this.BS);
+        ctx.strokeStyle = 'black';//ブロックの境界線：色
+        ctx.lineWidth=2;        //ブロックの境界線：幅
+        ctx.strokeRect(x, y, this.BS, this.BS);//枠線
     }
 
     //グレー一色の暫定版
@@ -610,6 +615,8 @@ export default class GameplayScene extends Scene {
                 ctx.fillRect(x, yBottom, BS, BS);
             }
         }
+
+
     }
 
 
