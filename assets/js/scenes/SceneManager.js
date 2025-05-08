@@ -45,6 +45,10 @@ export class SceneManager {
                 : sceneNameOrInstance;
 
         this._pushScene(next, params);
+
+    //    this.gameConfig = new GameConfig(window.settingOptions);//これでうまくいくか！？->NG
+
+
     }
 
     /** 上に一時的なシーンを重ねる（Pause など Step3 用） */

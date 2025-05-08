@@ -34,18 +34,7 @@ export class AppRoot {
         this.input = new CombinedInputHandler();
         window.input = this.input;                     // 既存コード互換のため暫定公開
 
-        /* 設定 & エンジン */
-        const cfgObj = { speedIndex: window.settingOptions?.['落下速度'] };
-        const fieldIndex = window.settingOptions?.['フィールド'];
-        const fieldSizes = [
-            { COLS: 10, ROWS: 20 },
-            { COLS: 15, ROWS: 30 },
-            { COLS: 20, ROWS: 40 }
-        ];
-        if (typeof fieldIndex === 'number' && fieldSizes[fieldIndex]) {
-            Object.assign(cfgObj, fieldSizes[fieldIndex]);
-        }
-        this.gameConfig = new GameConfig(cfgObj);
+        this.gameConfig = new GameConfig();         //デフォルト値の設定
         this.engine = new Engine('gameCanvas', this.gameConfig);
 
         /* シーンマネージャ */
@@ -130,18 +119,11 @@ export class AppRoot {
      * Reconfigure game settings and engine after settings change
      */
     reconfigure() {
-        const overrides = { speedIndex: window.settingOptions?.['落下速度'] };
-        const fieldIndex = window.settingOptions?.['フィールド'];
-        const fieldSizes = [
-            { COLS: 10, ROWS: 20 },
-            { COLS: 15, ROWS: 30 },
-            { COLS: 20, ROWS: 40 }
-        ];
-        if (typeof fieldIndex === 'number' && fieldSizes[fieldIndex]) {
-            Object.assign(overrides, fieldSizes[fieldIndex]);
-        }
-        this.gameConfig = new GameConfig(overrides);
+        // GameConfig のコンストラクタ内で window.settingOptions を参照して各種値を設定
+        this.gameConfig = new GameConfig();
         this.engine.cfg = this.gameConfig;
+
+        // キャンバスサイズ・UI 部分を再計算
         const width = (this.gameConfig.COLS + 2) * this.gameConfig.BLOCK_SIZE;
         const height = (this.gameConfig.TOP_MARGIN + this.gameConfig.ROWS + 1) * this.gameConfig.BLOCK_SIZE;
         this.engine.canvas.width = width;
@@ -150,6 +132,7 @@ export class AppRoot {
         this.engine.height = height;
         document.getElementById('statsArea').style.height = `${height}px`;
     }
+
 
     /** アプリ起動（初期化完了後にメインループ開始） */
     async start() {

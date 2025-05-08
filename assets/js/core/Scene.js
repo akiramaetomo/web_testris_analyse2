@@ -1,6 +1,9 @@
 // core/Scene.js   ESModule
 export class Scene {
     /** SceneManager から渡される参照（任意） */
+
+    constructor(){}
+
     setManager(manager) { this._mgr = manager; }
   
     /** 初回呼び出し */        enter(/* params */) {}

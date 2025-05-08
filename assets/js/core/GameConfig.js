@@ -3,7 +3,64 @@
 // new GameConfig({ ROWS:30, speedIndex:2 }) のようにオーバーライド可能。
 
 // ドロップ速度オプション（SettingsSceneで表示するラベル）
-export const DROP_SPEED_LABELS = [
+
+
+
+import { SETTING_DEFINITIONS } from '../config/settingDefinitions.js';
+
+export class GameConfig {
+    constructor(overrides = {}) {
+        for (const def of SETTING_DEFINITIONS) {
+            const key = def.key;
+            const options = def.options;
+            const saved = overrides[key] ?? window.settingOptions?.[key];
+            let selected;
+
+            if (typeof saved !== 'undefined') {
+                const idx = options.findIndex(opt => JSON.stringify(opt.value) === JSON.stringify(saved));
+                selected = idx >= 0 ? idx : def.defaultIndex;
+            } else {
+                selected = def.defaultIndex;
+            }
+
+            const opt = options[selected];
+            this[key] = opt.value;
+
+            // ラベルも必要なら同時に
+            this[key + 'Label'] = opt.label;
+
+            // 特別用途に応じた追加変数も（例：落下間隔）
+            if (key === 'speedIndex') {
+                this.NATURAL_DROP_INTERVAL = opt.value;
+            }
+
+            if (key === 'fieldSize') {
+                this.COLS = opt.value[0];
+                this.ROWS = opt.value[1];
+            }
+        }
+
+        // 固定設定（今後可変化予定）
+        this.TOP_MARGIN = 1;
+        this.BLOCK_SIZE = 40;
+        this.NEXT_BLOCK_SIZE = 40;
+        this.SOFT_DROP_FRAME = 3;
+        this.KEY_MOVE_INITIAL_DELAY = 200;
+        this.KEY_MOVE_REPEAT_INTERVAL = 17;
+        this.LINE_STEP_FALL_TIME = 0;
+        this.LINE_STEP_PAUSE_TIME = 0;
+        this.FALL_DELAY = 500;
+        this.LOCK_DELAY = 500;
+        this.SPAWN_DELAY = 500;
+    }
+}
+
+
+
+
+
+
+export const DROP_SPEED_LABEL_old = [
     '20G(833us)',
     '10G(1.67ms)',
     '5G(3.33ms)',
@@ -16,7 +73,7 @@ export const DROP_SPEED_LABELS = [
 ];
 
 // ドロップ速度定数（ms単位）
-export const DROP_SPEED_VALUES = [
+export const DROP_SPEED_VALUES_old = [
     0.833,
     1.667,
     3.333,
@@ -28,7 +85,7 @@ export const DROP_SPEED_VALUES = [
     1000
 ];
 
-export class GameConfig {
+export class GameConfig_old {
     constructor(overrides = {}) {
         // drop speed index: overrides or persistent setting or default(1G)
         let speedIndex = overrides.speedIndex;

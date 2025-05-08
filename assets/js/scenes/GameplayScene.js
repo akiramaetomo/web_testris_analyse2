@@ -53,8 +53,12 @@ export default class GameplayScene extends Scene {
     /* ===== Scene ライフサイクル ===== */
     enter() {
         soundManager.resumeContext();
-        window.bgmManager.switch('bgm_play');
+//        window.bgmManager.switch('bgm_play');
 
+        // 設定画面で選んだ BGM キーを取得して再生
+        const bgmKey = this.cfg.bgm;  
+        window.bgmManager.switch(bgmKey);
+    
         // Delay before gameplay starts
         this._startDelay = 1000; // milliseconds
         this.state.currentPhase = SUB.PENDING_START;
