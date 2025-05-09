@@ -4,13 +4,11 @@ import { ACTIONS } from '../input/inputHandler.js';  // ★ 追加
 //import { soundManager } from '../audio/globalSoundManager.js'; // ←シングルトンで共有している想定
 import { EventBus } from '../utils/EventBus.js';
 
-//soundManager.play('bgm_title', { loop:true, bus:'bgm' });
 
 export default class TitleScene extends Scene {
 
     constructor(mgr) { //本当は不要。他に処理が無い場合は親クラスのコンストラクタが使えるため。
         super(mgr); 
-//        this._mgr = mgr; 
     } 
     
     enter() {

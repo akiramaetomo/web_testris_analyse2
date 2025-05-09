@@ -73,7 +73,7 @@ export class AppRoot {
         /* SEサウンドロード */
         this.initTasks.register('LoadSounds', async () => {
             await this.soundMgr.loadAllSounds(SOUND_PATHS);
-            this.soundMgr.setVolume({ master: 0.3, sfx: 0.3, bgm: 0.3 });
+            this.soundMgr.setVolume({ master: 0.5, sfx: 0.5, bgm: 0.5 });
         });
 
         /* BGMManager 初期化 */

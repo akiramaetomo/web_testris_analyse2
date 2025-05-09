@@ -384,11 +384,11 @@ export default class GameplayScene extends Scene {
         if (this._gameoverDelay <= 0 && !this._hasPlayedOverSE) {
             this._hasPlayedOverSE = true;       // 一度きり
             this._gameoverDelay = null;         // 二度と入らないようにガード
-            soundManager.play('se_over',{volume:0.4});       // 一度だけ SE 再生
+            soundManager.play('se_over',{volume:0.6});       // 一度だけ SE 再生
             soundManager.fadeOutBgm(0);
             // BGM 切り替え
             setTimeout(() => {
-                soundManager.play('bgm_over', { bus: 'bgm' ,volume:0.6});
+                soundManager.play('bgm_over', { bus: 'bgm' ,volume:2});
                 this.state.currentPhase = SUB.GAMEOVER;
                 EventBus.emit('phaseChanged', 'gameover');
             }, 1800); /* overまでの長さ[ms] */

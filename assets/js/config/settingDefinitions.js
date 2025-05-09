@@ -29,9 +29,10 @@ export const SETTING_DEFINITIONS = [
         key: 'bgm',
         label: 'BGM',
         options: [
-            { label: 'play', value: 'bgm_play' },
-            { label: 'over', value: 'bgm_over' },
-            { label: 'loop', value: 'loop1_v3' }
+            { label: 'default', value: 'bgm_play' },
+            { label: 'TB303-1', value: 'bgm_play2' },
+            { label: 'TB303-2', value: 'bgm_play3' },
+            { label: 'TB303-3', value: 'bgm_play4' }
         ],
         defaultIndex: 0
     }
@@ -54,5 +55,8 @@ export const SOUND_PATHS = {
 export const BGM_PATHS = {
     bgm_init: './assets/audio/bgm_init.wav',
     bgm_play: './assets/audio/bgm_play.wav',
-    bgm_over: './assets/audio/bgm_over.wav'
+    bgm_over: './assets/audio/bgm_over.wav',
+    bgm_play2: './assets/audio/bgm_play2.wav',
+    bgm_play3: './assets/audio/bgm_play3.wav',
+    bgm_play4: './assets/audio/bgm_play4.wav'
 };
