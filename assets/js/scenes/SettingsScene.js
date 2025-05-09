@@ -5,8 +5,9 @@ import { SETTING_DEFINITIONS } from '../config/settingDefinitions.js';
 
 export default class SettingsScene extends Scene {
 
-    constructor() {
-        super();
+    constructor(mgr) {
+        super(mgr);
+
         this._cursor = 0;
 
         // 各設定項目を UI 表示用に変換（インデックス付き）
@@ -46,7 +47,7 @@ export default class SettingsScene extends Scene {
 
 
 
-    update(dt) {
+    update() {
         //'B',enter,ゲームパッドのBackボタンでタイトルへ戻る
         if (window.input.isPressed(ACTIONS.BACK) || window.input.isPressed(ACTIONS.ENTER)) {
             this._mgr.changeTo('title');

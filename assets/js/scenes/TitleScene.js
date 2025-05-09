@@ -8,8 +8,11 @@ import { EventBus } from '../utils/EventBus.js';
 
 export default class TitleScene extends Scene {
 
-    constructor(mgr) { super(); this._mgr = mgr; }   // ← mgr 受け取る
-
+    constructor(mgr) { //本当は不要。他に処理が無い場合は親クラスのコンストラクタが使えるため。
+        super(mgr); 
+//        this._mgr = mgr; 
+    } 
+    
     enter() {
         console.log('[Scene] enter Title !!!!!');
         EventBus.emit('phaseChanged', 'title');
@@ -33,7 +36,7 @@ export default class TitleScene extends Scene {
         window.removeEventListener('keydown', this._onKey);
     }
 
-    update(dt) {
+    update() {
         if (window.input.isPressed(ACTIONS.ENTER) || window.input.isPressed(ACTIONS.START)) {
             // Apply desired device if set
             if (window.desiredDevice) {

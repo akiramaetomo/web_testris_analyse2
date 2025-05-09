@@ -69,7 +69,7 @@ export class SceneManager {
 
     /** --- 内部ヘルパ --- */
     _pushScene(scene, params) {
-        scene.setManager(this);
+    //    scene.setManager(this);
         scene.enter(params);
         this._stack.push(scene);
     }

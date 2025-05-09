@@ -7,13 +7,9 @@ import { Engine } from './core/Engine.js';
 import { SceneManager } from './scenes/SceneManager.js';
 import { SceneFactory } from './scenes/SceneFactory.js';
 import { SOUND_PATHS, BGM_PATHS } from './config/settingDefinitions.js';
-
 import { CombinedInputHandler } from './input/CombinedInputHandler.js';
-import { ACTIONS } from './input/inputHandler.js';
-
 import { soundManager } from './audio/globalSoundManager.js'; // 既存シングルトン
 import { BGMManager } from './audio/BGMManager.js';
-
 import { StatsManager } from './utils/StatsManager.js';
 import { DisplayManager } from './utils/DisplayManager.js';
 import { WallpaperController } from './utils/WallpaperController.js';
@@ -29,12 +25,12 @@ export class AppRoot {
         window.bgmManager = this.bgmMgr;
 
         /* サウンド */
-        this.soundMgr = soundManager;               // globalSoundManager.js で export 済
-        this.eventBus = EventBus;                      // 既存シングルトンを転用
+        this.soundMgr = soundManager;               // 既存シングルトンを転用
+        this.eventBus = EventBus;                   // 既存シングルトンを転用
 
         /* 入力 */
         this.input = new CombinedInputHandler();
-        window.input = this.input;                     // 既存コード互換のため暫定公開
+        window.input = this.input;
 
         //コンフィグ
         this.gameConfig = new GameConfig();         //デフォルト値の設定
@@ -49,7 +45,7 @@ export class AppRoot {
         this.scenes = new SceneManager(sceneFactory.createScene.bind(sceneFactory), 'title', this);
 
         /* 統計・表示・壁紙 */
-        this.statsMgr = StatsManager;
+        this.statsMgr = StatsManager;       // 既存シングルトンを転用
 
         //処理負荷計測
         this.perfStats = new PerfStats({ enabled: true, interval: 1000, keyToggle: 'F3' });
@@ -69,11 +65,11 @@ export class AppRoot {
         /* AppInitializer で非同期タスクをまとめる */
         this.initTasks = new AppInitializer();
 
-        this._registerInitTasks(statsEl, infoEl);
+        this._registerInitTasks();
     }
 
     /** 非同期初期化タスクの登録 */
-    _registerInitTasks(statsEl, infoEl) {
+    _registerInitTasks() {
         /* SEサウンドロード */
         this.initTasks.register('LoadSounds', async () => {
             await this.soundMgr.loadAllSounds(SOUND_PATHS);
@@ -100,9 +96,6 @@ export class AppRoot {
         this.initTasks.register('InitWallpaper', async () => {
             await this.wallpaper.init();
         });
-
-
-
     }
 
     /**
@@ -126,7 +119,7 @@ export class AppRoot {
 
     /** アプリ起動（初期化完了後にメインループ開始） */
     async start() {
-        await this.initTasks.init();                  // 既存の runAll 相当
+        await this.initTasks.init();
 
         let lastStatsHTML = "";
         this.engine.start((dt) => {
@@ -146,7 +139,7 @@ export class AppRoot {
                 document.getElementById('infoArea').innerHTML = "";
             }
 
-            this.input._afterPoll();                    // 既存ロジック保持
+            this.input._afterPoll();
             this.perfStats.end();
         });
 
@@ -156,7 +149,7 @@ export class AppRoot {
 }
 
 
-/* シングルトンとして公開（旧 window.bgmManager などの互換維持用） */
+/* シングルトンとして公開 */
 export const app = new AppRoot();
 window.app = app;
 //window.engine = app.engine;     // 必要に応じて追加

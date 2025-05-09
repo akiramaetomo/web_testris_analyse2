@@ -79,7 +79,7 @@ export class SoundManager {
             volume = (loop ? 1 : 0.9),
             playbackRate = 1,
             detune = 0,
-            poly = false,
+//            poly = false,
             pan = 0,
             bus = 'sfx',            // 'sfx' | 'bgm'
             effects = []                // AudioNode[] : 追加エフェクト

@@ -1,7 +1,6 @@
 // @ts-nocheck
 // scenes/GameplayScene.js  ── 完全 FSM 移植版
 import { Scene } from '../core/Scene.js';
-import { GameConfig } from '../core/GameConfig.js';
 import { GameState } from '../core/GameState.js';
 import { TETROMINOES } from '../resources/tetrominoes.js';
 import { soundManager } from '../audio/globalSoundManager.js';
@@ -31,8 +30,8 @@ export default class GameplayScene extends Scene {
 
     /* ===== コンストラクタ ===== */
     constructor(mgr) {
-        super();
-        this._mgr = mgr;
+        super(mgr);
+//        this._mgr = mgr;
         StatsManager.reset();
         this.cfg = this._mgr.app.gameConfig;
         this.state = new GameState(this.cfg);
@@ -81,7 +80,6 @@ export default class GameplayScene extends Scene {
 
 
         const s = this.state;
-        const cfg = this.cfg;
         const inp = window.input;
 
         /* 1) 入力を状態へブリッジ */
@@ -490,7 +488,7 @@ export default class GameplayScene extends Scene {
     }
 
     fixBlock() {
-        const s = this.state, cfg = this.cfg;
+        const s = this.state;
 
         const { shape, row, col, color } = this.state.currentBlock;
         for (let r = 0; r < 4; r++)
