@@ -3,7 +3,9 @@
       "allowJs": true,
       "checkJs": true,
       "noEmit": true,
-      "strict": false
+"strict": false,
+"module": "esnext",
+"moduleResolution": "node"
     },
     "include": ["src/**/*", "assets/js/**/*"]
   }

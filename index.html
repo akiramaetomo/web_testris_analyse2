@@ -2,6 +2,7 @@
 <html lang="ja">
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta charset="UTF-8" />
     <title>Tetris with Lock Delay and Separated Sounds</title>
     <style>
@@ -97,10 +98,79 @@
             box-sizing: border-box;
             font-size: 10px;
         }
+    /* touch controls portrait */
+    @media (max-width: 768px) and (orientation: portrait) {
+      #touchControls {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 2;
+      }
+      .controls-group {
+        position: absolute;
+        pointer-events: auto;
+        display: flex;
+        gap: 8px;
+      }
+      /* initial left controls removed */
+      .controls-group.center {
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      /* initial right controls removed */
+      .control-button {
+        width: 48px;
+        height: 48px;
+        border-radius: 8px;
+        background: rgba(255,255,255,0.2);
+        color: white;
+        font-size: 18px;
+      }
+      /* leftArea vertical layout */
+      #leftArea {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      /* right controls row layout */
+      .controls-group.right {
+        display: flex;
+        flex-direction: row;
+        gap: 8px;
+      }
+      /* cross shape for left controls */
+      .controls-group.left {
+        display: grid;
+        grid-template-columns: repeat(3, 48px);
+        grid-template-rows: repeat(3, 48px);
+        gap: 8px;
+      }
+      .controls-group.left [data-action="move_up"]    { grid-area: 1 / 2; }
+      .controls-group.left [data-action="move_left"]  { grid-area: 2 / 1; }
+      .controls-group.left [data-action="move_down"]  { grid-area: 3 / 2; }
+      .controls-group.left [data-action="move_right"] { grid-area: 2 / 3; }
+    }
     </style>
 </head>
 
 <body tabindex="0">
+    <div id="touchControls">
+      <div class="controls-group left">
+        <button class="control-button" data-action="move_left">◀</button>
+        <button class="control-button" data-action="move_up">▲</button>
+        <button class="control-button" data-action="move_down">▼</button>
+        <button class="control-button" data-action="move_right">▶</button>
+      </div>
+      <div class="controls-group center">
+        <button class="control-button" data-action="back">⟲</button>
+        <button class="control-button" data-action="start">▶</button>
+      </div>
+      <div class="controls-group right">
+        <button class="control-button" data-action="rotate_l">X</button>
+        <button class="control-button" data-action="rotate_r">B</button>
+      </div>
+    </div>
     <canvas id="bgCanvas"></canvas>
 
 
