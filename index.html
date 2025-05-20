@@ -2,186 +2,215 @@
 <html lang="ja">
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tetris with Lock Delay and Separated Sounds</title>
-    <style>
 
+    <style>
+        /* ================= 共通スタイル ================= */
         #bgCanvas {
             position: fixed;
-            /* スクロールしても動かない最背面レイヤー */
             inset: 0;
-            /* 画面全体を覆う */
             z-index: 0;
-            /* 他レイヤーより背面。必要なら -1 でも可 */
             pointer-events: none;
-            /* クリックを透過させる */
+            /* 背景エフェクト用 */
         }
 
-        #gameContainer {
-            /* 既存ゲーム領域を前面へ */
-            position: relative;
-            z-index: 1;
-        }
-
-
-
-        /* ★[全体デザイン]: ページ全体の背景など */
         body {
-            background-color: #001d3b;
-            /* ダークグレー背景 */
+            background: #001d3b;
             margin: 0;
             padding: 0;
             font-family: sans-serif;
         }
 
-        /* ★[レイアウト1] メインコンテナを横並びに */
+        /* ---------- ゲーム本体レイアウト ---------- */
         #gameContainer {
             display: flex;
             flex-direction: row;
             margin: 20px;
             justify-content: center;
             align-items: flex-start;
+            position: relative;
+            z-index: 1;
         }
 
-        /* ゲーム統計情報表示領域 */
         #statsArea {
             width: 100px;
-            background-color: #222;
+            margin-right: 20px;
+            background: #222;
             color: #fff;
+            font-size: 14px;
             padding: 10px;
             box-sizing: border-box;
-            font-size: 14px;
-            margin-right: 20px;
-            text-align: left;
         }
 
-        /* ★[左側エリア]: ゲームCanvas */
         #leftArea {
             display: flex;
             flex-direction: column;
             margin-right: 20px;
-            /* 右側との間隔 */
         }
 
-        /* ゲームCanvas（壁＋プレイ領域） */
         #gameCanvas {
-            background-color: #000;
+            background: #000;
             border: 2px solid #222;
             display: block;
         }
 
-        /* ★[右側エリア]: 縦に並べて次ブロックCanvas＆ダミー領域 */
         #rightArea {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            /* 左寄せ */
         }
 
-        /* 次ブロックCanvas: 幅80×高さ80に固定(4×4マスを想定) */
         #nextCanvas {
-            background-color: #000;
+            background: #000;
             border: 2px solid #222;
             display: block;
             margin-bottom: 20px;
+            width: 160px;
+            height: 160px;
+            /* 4×4 マスを想定 */
         }
 
-        /* ダミー領域(将来的にスコアや各種情報を表示) */
         #infoArea {
             width: 80px;
             height: 200px;
-            background-color: #333;
-            /* 薄暗い背景 */
+            background: #333;
             color: #fff;
+            font-size: 10px;
             padding: 5px;
             box-sizing: border-box;
-            font-size: 10px;
         }
-    /* touch controls portrait */
-    @media (max-width: 768px) and (orientation: portrait) {
-      #touchControls {
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        z-index: 2;
-      }
-      .controls-group {
-        position: absolute;
-        pointer-events: auto;
-        display: flex;
-        gap: 8px;
-      }
-      /* initial left controls removed */
-      .controls-group.center {
-        bottom: 16px;
-        left: 50%;
-        transform: translateX(-50%);
-      }
-      /* initial right controls removed */
-      .control-button {
-        width: 48px;
-        height: 48px;
-        border-radius: 8px;
-        background: rgba(255,255,255,0.2);
-        color: white;
-        font-size: 18px;
-      }
-      /* leftArea vertical layout */
-      #leftArea {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-      /* right controls row layout */
-      .controls-group.right {
-        display: flex;
-        flex-direction: row;
-        gap: 8px;
-      }
-      /* cross shape for left controls */
-      .controls-group.left {
-        display: grid;
-        grid-template-columns: repeat(3, 48px);
-        grid-template-rows: repeat(3, 48px);
-        gap: 8px;
-      }
-      .controls-group.left [data-action="move_up"]    { grid-area: 1 / 2; }
-      .controls-group.left [data-action="move_left"]  { grid-area: 2 / 1; }
-      .controls-group.left [data-action="move_down"]  { grid-area: 3 / 2; }
-      .controls-group.left [data-action="move_right"] { grid-area: 2 / 3; }
-    }
+
+        /* ================== スマホ縦持ち：タッチ操作 ================== */
+        @media (max-width:500px) and (orientation:portrait) {
+
+            /* ゲーム一式を 0.65 倍に縮小して左上基点で描画 */
+            #gameContainer {
+                transform: scale(0.5);
+                /* ← 好みで 0.5〜0.8 に調整 */
+                transform-origin: top auto;
+                /* 起点を左上に固定 */
+            }
+
+
+            /* タッチコントローラ全体を最前面に固定 */
+            #touchControls {
+                position: fixed;
+                inset: 0;
+                pointer-events: none;
+                /* デフォルト透過 */
+                z-index: 2;
+            }
+
+            /* 各ボタン共通 */
+            .control-button {
+                width: 48px;
+                height: 48px;
+                border-radius: 8px;
+                background: rgba(255, 255, 255, .25);
+                color: #fff;
+                font-size: 18px;
+            }
+
+            /* ------ 十字キー（左下）------ */
+            .controls-group.left {
+                position: absolute;
+                bottom: 16px;
+                left: 16px;
+                display: grid;
+                grid-template-columns: repeat(3, 48px);
+                grid-template-rows: repeat(3, 48px);
+                gap: 8px;
+                pointer-events: auto;
+                /* タップ有効化 */
+            }
+
+            /* グリッド内の配置（行列を明示）*/
+            [data-action="move_up"] {
+                grid-column: 2;
+                grid-row: 1;
+            }
+
+            [data-action="move_left"] {
+                grid-column: 1;
+                grid-row: 2;
+            }
+
+            [data-action="move_down"] {
+                grid-column: 2;
+                grid-row: 3;
+            }
+
+            [data-action="move_right"] {
+                grid-column: 3;
+                grid-row: 2;
+            }
+
+            /* ------ START / PAUSE（中央下）------ */
+            .controls-group.center {
+                position: absolute;
+                bottom: 16px;
+                left: 50%;
+                transform: translateX(-50%);
+                display: flex;
+                gap: 8px;
+                pointer-events: auto;
+            }
+
+            /* ------ 回転ボタン（右下）------ */
+            .controls-group.right {
+                position: absolute;
+                bottom: 16px;
+                right: 16px;
+                display: flex;
+                gap: 8px;
+                pointer-events: auto;
+            }
+
+            /* ゲームキャンバスを中央揃えにして余白を確保 */
+            #leftArea {
+                align-items: center;
+            }
+        }
     </style>
 </head>
 
 <body tabindex="0">
+    <!-- ===== タッチコントローラ ===== -->
     <div id="touchControls">
-      <div class="controls-group left">
-        <button class="control-button" data-action="move_left">◀</button>
-        <button class="control-button" data-action="move_up">▲</button>
-        <button class="control-button" data-action="move_down">▼</button>
-        <button class="control-button" data-action="move_right">▶</button>
-      </div>
-      <div class="controls-group center">
-        <button class="control-button" data-action="back">⟲</button>
-        <button class="control-button" data-action="start">▶</button>
-      </div>
-      <div class="controls-group right">
-        <button class="control-button" data-action="rotate_l">X</button>
-        <button class="control-button" data-action="rotate_r">B</button>
-      </div>
-    </div>
-    <canvas id="bgCanvas"></canvas>
-
-
-        <div id="gameContainer">
-            <div id="statsArea"></div>
-        <!-- ★[左エリア]: ゲームCanvasを配置 -->
-        <div id="leftArea">
-<canvas id="gameCanvas" tabindex="0"></canvas>
+        <!-- 十字キー -->
+        <div class="controls-group left">
+            <button class="control-button" data-action="move_up" aria-label="Up">▲</button>
+            <button class="control-button" data-action="move_left" aria-label="Left">◀</button>
+            <button class="control-button" data-action="move_right" aria-label="Right">▶</button>
+            <button class="control-button" data-action="move_down" aria-label="Down">▼</button>
         </div>
 
-        <!-- ★[右エリア]: 縦に並べて、上=次ブロックCanvas、下=ダミー領域 -->
+        <!-- スタート／バック（中央）-->
+        <div class="controls-group center">
+            <button class="control-button" data-action="back" aria-label="Back">⟲</button>
+            <button class="control-button" data-action="start" aria-label="Start">▶</button>
+        </div>
+
+        <!-- 回転ボタン -->
+        <div class="controls-group right">
+            <button class="control-button" data-action="rotate_l" aria-label="Rotate Left">X</button>
+            <button class="control-button" data-action="rotate_r" aria-label="Rotate Right">B</button>
+        </div>
+    </div>
+
+    <!-- 背景エフェクト用キャンバス -->
+    <canvas id="bgCanvas"></canvas>
+
+    <!-- ===== ゲーム UI ===== -->
+    <div id="gameContainer">
+        <div id="statsArea"></div>
+
+        <div id="leftArea">
+            <canvas id="gameCanvas" tabindex="0"></canvas>
+        </div>
+
         <div id="rightArea">
             <canvas id="nextCanvas" width="160" height="160"></canvas>
             <div id="infoArea">
@@ -190,21 +219,14 @@
         </div>
     </div>
 
-
-    <!-- 負荷率表示用 -->
+    <!-- パフォーマンス表示（任意で表示）-->
     <div id="perfStats" style="position:absolute; right:8px; top:8px;
-           color:#0f0; font:12px monospace; pointer-events:none;
-           background:rgba(0,0,0,.35); padding:2px 4px;
-           display:none;">
+                              color:#0f0; font:12px monospace; pointer-events:none;
+                              background:rgba(0,0,0,.35); padding:2px 4px; display:none;">
     </div>
 
-
-
-    <!-- ★[サウンド定義]: 以前ここで行っていたが削除。soundManager.jsにて実施 -->
-
-    <!-- ★ 外部JavaScriptファイルを読み込み -->
+    <!-- ===== JavaScript ===== -->
     <script type="module" src="assets/js/main.js"></script>
-
 </body>
 
 </html>
