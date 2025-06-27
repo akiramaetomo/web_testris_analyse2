@@ -1,0 +1,15 @@
+dummy/
+analysis/
+.vscode
+.crossnote
+node_modules/
+
+#class関係解析スクリプト
+#基本はanalysis/に格納しておく
+extract_meta.js
+meta.md
+meta.pdf
+
+web_testris_dev.code-workspace
+package.json
+package-lock.json
