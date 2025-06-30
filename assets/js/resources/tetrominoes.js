@@ -2,7 +2,8 @@
 export const TETROMINOES = [
     {
         name: 'T',
-        color: 'Blue',
+//        color: 'Blue',
+        color: 'rgb(27, 166, 190)', // 水色
         shapes: [
             // 0度
             [
@@ -36,7 +37,9 @@ export const TETROMINOES = [
     },
     {
         name: 'I',
-        color: 'Red',
+//        color: 'Red',
+        color: 'rgb(228, 20, 20)', // 赤
+
         shapes: [
             // 0度
             [
@@ -70,7 +73,9 @@ export const TETROMINOES = [
     },
     {
         name: 'J',
-        color: 'Purple',
+//        color: 'Purple',
+        color: 'rgb(4, 44, 246)', // 青
+
         shapes: [
             // 0度
             [
@@ -104,7 +109,8 @@ export const TETROMINOES = [
     },
     {
         name: 'L',
-        color: 'Orange',
+//        color: 'Orange',
+        color: 'rgb(244, 152, 14)', // オレンジ
         shapes: [
             // 0度
             [
@@ -138,7 +144,9 @@ export const TETROMINOES = [
     },
     {
         name: 'S',
-        color: 'Magenta',
+//        color: 'Magenta',
+        color: 'rgb(196, 55, 191)', //明るい紫（ピンク）
+
         shapes: [
             // 0度
             [
@@ -172,7 +180,9 @@ export const TETROMINOES = [
     },
     {
         name: 'Z',
-        color: 'Green',
+//        color: 'Green',
+        color: 'rgb(34, 197, 34)', //明るい緑
+
         shapes: [
             // 0度
             [
@@ -206,7 +216,9 @@ export const TETROMINOES = [
     },
     {
         name: 'O',
-        color: 'Yellow',
+//        color: 'Yellow',
+        color: 'rgb(239, 217, 13)', //黄色
+
         shapes: [
             // 0度
             [

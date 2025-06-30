@@ -35,6 +35,15 @@ export const SETTING_DEFINITIONS = [
             { label: 'TB303-3', value: 'bgm_play4' }
         ],
         defaultIndex: 0
+    },
+    {
+        key: 'enableBufferedRotation',
+        label: '落下前回転受付',
+        options: [
+            { label: 'ON', value: true },
+            { label: 'OFF', value: false }
+        ],
+        defaultIndex: 1
     }
 ];
 

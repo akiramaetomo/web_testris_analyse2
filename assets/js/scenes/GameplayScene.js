@@ -68,12 +68,21 @@ export default class GameplayScene extends Scene {
 
     /* ===== メイン update ===== */
     update(dt) {
+        // Buffered rotation input before drop
+        if (this._startDelay != null && this.cfg.enableBufferedRotation) {
+            if (window.input.isPressed(ACTIONS.ROTATE_L)) this._bufferedRotateDir = -1;
+            if (window.input.isPressed(ACTIONS.ROTATE_R)) this._bufferedRotateDir = 1;
+        }
         // Pending start delay
         if (this._startDelay != null) {
             this._startDelay -= dt;
             if (this._startDelay <= 0) {
                 this._startDelay = null;
                 this.state.currentPhase = SUB.PLAYING;
+                if (this.cfg.enableBufferedRotation && this._bufferedRotateDir) {
+                    this.rotateBlock(this._bufferedRotateDir);
+                    this._bufferedRotateDir = 0;
+                }
             }
             return;
         }
@@ -215,7 +224,15 @@ export default class GameplayScene extends Scene {
     }
 
     spawnBlock() {
+
+        console.log('spawnBlock:', 'enableBufferedRotation=', this.cfg.enableBufferedRotation, 'bufferedRotateDir=', this._bufferedRotateDir, 'bufferedApplied=', this._bufferedRotationApplied);
+
+
         EventBus.emit('blockSpawned');
+        // buffered rotation: spawn前に押された回転入力を保持する (初期化)
+        this._bufferedRotateDir = 0;
+        // buffered rotation: バッファ回転適用済フラグ初期化
+        this._bufferedRotationApplied = false;
         this.state.blockFixed = false;       // フラグ解除
 
         this.state.currentBlock = this.nextBlock;
@@ -245,6 +262,12 @@ export default class GameplayScene extends Scene {
             if (steps) {
                 s.dropAccumulator -= steps * cfg.NATURAL_DROP_INTERVAL;
                 this.moveBlockDown(steps);
+                // buffered rotation: spawn前に押された回転を一度だけ適用
+                if (cfg.enableBufferedRotation && this._bufferedRotateDir && !this._bufferedRotationApplied) {
+                    this.rotateBlock(this._bufferedRotateDir);
+                    this._bufferedRotationApplied = true;
+                    this._bufferedRotateDir = 0;
+                }
             }
         } else {
             this.moveBlockDown(cfg.SOFT_DROP_FRAME);
@@ -366,6 +389,11 @@ export default class GameplayScene extends Scene {
 
     /* -------- SPAWNING -------- */
     updateSpawning(dt) {
+        // Buffered rotation input before spawn
+        if (this.cfg.enableBufferedRotation) {
+            if (window.input.isPressed(ACTIONS.ROTATE_L)) this._bufferedRotateDir = -1;
+            if (window.input.isPressed(ACTIONS.ROTATE_R)) this._bufferedRotateDir = 1;
+        }
         const s = this.state, cfg = this.cfg;
         s.phaseTimer += dt;
         this.handleHorizontalMove(dt);
