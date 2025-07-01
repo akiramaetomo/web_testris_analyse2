@@ -68,21 +68,28 @@ export default class GameplayScene extends Scene {
 
     /* ===== メイン update ===== */
     update(dt) {
+
+        //_startDelay　はゲーム開始時のディレイ　２秒弱　ココでのプリ回転入力を見ている。
+        //処理を入れていたが、this.spawnBlock()　でプリ回転入力見ているので不要だろう。
+
         // Buffered rotation input before drop
-        if (this._startDelay != null && this.cfg.enableBufferedRotation) {
-            if (window.input.isPressed(ACTIONS.ROTATE_L)) this._bufferedRotateDir = -1;
-            if (window.input.isPressed(ACTIONS.ROTATE_R)) this._bufferedRotateDir = 1;
-        }
+//        if (this._startDelay != null && this.cfg.enableBufferedRotation) {
+//            if (window.input.isPressed(ACTIONS.ROTATE_L)) this._bufferedRotateDir = -1;
+//            if (window.input.isPressed(ACTIONS.ROTATE_R)) this._bufferedRotateDir = 1;
+//        }
+
         // Pending start delay
         if (this._startDelay != null) {
             this._startDelay -= dt;
             if (this._startDelay <= 0) {
                 this._startDelay = null;
                 this.state.currentPhase = SUB.PLAYING;
-                if (this.cfg.enableBufferedRotation && this._bufferedRotateDir) {
-                    this.rotateBlock(this._bufferedRotateDir);
-                    this._bufferedRotateDir = 0;
-                }
+
+//ココで回転させても上壁に当たるだけ　削除対象                
+//                if (this.cfg.enableBufferedRotation && this._bufferedRotateDir) {
+//                    this.rotateBlock(this._bufferedRotateDir);
+//                    this._bufferedRotateDir = 0;
+//                }
             }
             return;
         }
@@ -225,16 +232,16 @@ export default class GameplayScene extends Scene {
 
     spawnBlock() {
 
-        console.log('spawnBlock:', 'enableBufferedRotation=', this.cfg.enableBufferedRotation, 'bufferedRotateDir=', this._bufferedRotateDir, 'bufferedApplied=', this._bufferedRotationApplied);
-
+//        console.log('spawnBlock:', 'enableBufferedRotation=', this.cfg.enableBufferedRotation, 'bufferedRotateDir=', this._bufferedRotateDir, 'bufferedApplied=', this._bufferedRotationApplied);
 
         EventBus.emit('blockSpawned');
+
         // buffered rotation: spawn前に押された回転入力を保持する (初期化)
         this._bufferedRotateDir = 0;
         // buffered rotation: バッファ回転適用済フラグ初期化
         this._bufferedRotationApplied = false;
-        this.state.blockFixed = false;       // フラグ解除
 
+        this.state.blockFixed = false;       // フラグ解除
         this.state.currentBlock = this.nextBlock;
         this.state.currentBlock.row = -this.cfg.TOP_MARGIN;
         this.state.currentBlock.col = Math.floor(this.cfg.COLS / 2 - 2);
@@ -262,12 +269,14 @@ export default class GameplayScene extends Scene {
             if (steps) {
                 s.dropAccumulator -= steps * cfg.NATURAL_DROP_INTERVAL;
                 this.moveBlockDown(steps);
+
+                //自然落下、ソフトドロップ両方でプリ回転を適用させたい。この位置は自然落下の条件なので不適切
                 // buffered rotation: spawn前に押された回転を一度だけ適用
-                if (cfg.enableBufferedRotation && this._bufferedRotateDir && !this._bufferedRotationApplied) {
-                    this.rotateBlock(this._bufferedRotateDir);
-                    this._bufferedRotationApplied = true;
-                    this._bufferedRotateDir = 0;
-                }
+//                if (cfg.enableBufferedRotation && this._bufferedRotateDir && !this._bufferedRotationApplied) {
+//                    this.rotateBlock(this._bufferedRotateDir);
+//                    this._bufferedRotationApplied = true;
+//                    this._bufferedRotateDir = 0;
+//                }
             }
         } else {
             this.moveBlockDown(cfg.SOFT_DROP_FRAME);
@@ -389,11 +398,11 @@ export default class GameplayScene extends Scene {
 
     /* -------- SPAWNING -------- */
     updateSpawning(dt) {
-        // Buffered rotation input before spawn
-        if (this.cfg.enableBufferedRotation) {
-            if (window.input.isPressed(ACTIONS.ROTATE_L)) this._bufferedRotateDir = -1;
-            if (window.input.isPressed(ACTIONS.ROTATE_R)) this._bufferedRotateDir = 1;
-        }
+        // Buffered rotation input before spawn　これはOKそう
+//        if (this.cfg.enableBufferedRotation) {
+//            if (window.input.isPressed(ACTIONS.ROTATE_L)) this._bufferedRotateDir = -1;
+//            if (window.input.isPressed(ACTIONS.ROTATE_R)) this._bufferedRotateDir = 1;
+//        }
         const s = this.state, cfg = this.cfg;
         s.phaseTimer += dt;
         this.handleHorizontalMove(dt);
@@ -487,11 +496,23 @@ export default class GameplayScene extends Scene {
     moveBlockDown(step = 1) {
         const b = this.state.currentBlock;
         for (let i = 0; i < step; i++) {
+
+       //自然落下、ソフトドロップ両方でプリ回転を適用させたい。この位置は自然落下の条件なので不適切
+                // buffered rotation: spawn前に押された回転を一度だけ適用
+//                if (cfg.enableBufferedRotation && this._bufferedRotateDir && !this._bufferedRotationApplied) {
+//                   this.rotateBlock(this._bufferedRotateDir);
+//                   this._bufferedRotationApplied = true;
+//                   this._bufferedRotateDir = 0;
+//                }
+
             b.row++;
             if (this.isCollision()) { b.row--; return false; }
+
         }
         return true;
     }
+
+
 
     //Helper
     //仮に1行下げた場合の衝突判定を行う
