@@ -32,10 +32,20 @@ export default class GameplayScene extends Scene {
     constructor(mgr) {
         super(mgr);
 //        this._mgr = mgr;
+        // StatsManager を初期化（EventBus購読を登録）
+        StatsManager.init();
         StatsManager.reset();
         this.cfg = this._mgr.app.gameConfig;
         this.state = new GameState(this.cfg);
         this.field = Array.from({ length: this.cfg.ROWS }, () => Array(this.cfg.COLS).fill(0));
+
+
+        //！！必要なハズ！！    
+        // buffered rotation: spawn前に押された回転入力を保持する (初期化)
+        this._bufferedRotateDir = 0;
+        // buffered rotation: バッファ回転適用済フラグ初期化
+        this._bufferedRotationApplied = false;
+
 
         /* Next / Current ブロック */
         this.nextBlock = this.makeRandomBlock();
@@ -46,6 +56,9 @@ export default class GameplayScene extends Scene {
 
         //ゲームオーバ時SE＆BGM多重鳴り禁止用
         this._hasPlayedOverSE = false;
+
+
+
 
     }
 
@@ -70,13 +83,11 @@ export default class GameplayScene extends Scene {
     update(dt) {
 
         //_startDelay　はゲーム開始時のディレイ　２秒弱　ココでのプリ回転入力を見ている。
-        //処理を入れていたが、this.spawnBlock()　でプリ回転入力見ているので不要だろう。
-
-        // Buffered rotation input before drop
-//        if (this._startDelay != null && this.cfg.enableBufferedRotation) {
-//            if (window.input.isPressed(ACTIONS.ROTATE_L)) this._bufferedRotateDir = -1;
-//            if (window.input.isPressed(ACTIONS.ROTATE_R)) this._bufferedRotateDir = 1;
-//        }
+        //処理を入れていたが、this.spawnBlock()　でプリ回転入力見ているので不要ー＞ではない。１回だけ実行。必要。
+        if (this._startDelay != null && this.cfg.enableBufferedRotation) {
+            if (window.input.isPressed(ACTIONS.ROTATE_L)) this._bufferedRotateDir = -1;
+            if (window.input.isPressed(ACTIONS.ROTATE_R)) this._bufferedRotateDir = 1;
+        }
 
         // Pending start delay
         if (this._startDelay != null) {
@@ -85,11 +96,6 @@ export default class GameplayScene extends Scene {
                 this._startDelay = null;
                 this.state.currentPhase = SUB.PLAYING;
 
-//ココで回転させても上壁に当たるだけ　削除対象                
-//                if (this.cfg.enableBufferedRotation && this._bufferedRotateDir) {
-//                    this.rotateBlock(this._bufferedRotateDir);
-//                    this._bufferedRotateDir = 0;
-//                }
             }
             return;
         }
@@ -230,16 +236,16 @@ export default class GameplayScene extends Scene {
         };
     }
 
+    //次のブロックを出す。ブロック満杯判定ー＞ゲームオーバへの分岐
     spawnBlock() {
-
-//        console.log('spawnBlock:', 'enableBufferedRotation=', this.cfg.enableBufferedRotation, 'bufferedRotateDir=', this._bufferedRotateDir, 'bufferedApplied=', this._bufferedRotationApplied);
 
         EventBus.emit('blockSpawned');
 
-        // buffered rotation: spawn前に押された回転入力を保持する (初期化)
-        this._bufferedRotateDir = 0;
+        // this._bufferedRotateDir = 0;//ここでこれを入れると回転しない！！！
         // buffered rotation: バッファ回転適用済フラグ初期化
         this._bufferedRotationApplied = false;
+
+        console.log('spawnBlock:', 'enableBufferedRotation=', this.cfg.enableBufferedRotation, 'bufferedRotateDir=', this._bufferedRotateDir, 'bufferedApplied=', this._bufferedRotationApplied);
 
         this.state.blockFixed = false;       // フラグ解除
         this.state.currentBlock = this.nextBlock;
@@ -260,7 +266,7 @@ export default class GameplayScene extends Scene {
     /* -------- PLAYING -------- */
     updatePlaying(dt) {
         const s = this.state, cfg = this.cfg;
-
+        
         /* 自然 or ソフトドロップ */
         if (!s.forcedDrop) {
             s.dropAccumulator += dt;
@@ -270,13 +276,17 @@ export default class GameplayScene extends Scene {
                 s.dropAccumulator -= steps * cfg.NATURAL_DROP_INTERVAL;
                 this.moveBlockDown(steps);
 
-                //自然落下、ソフトドロップ両方でプリ回転を適用させたい。この位置は自然落下の条件なので不適切
+                //やはりこの位置か？？！！！削除対象！！！自然落下、ソフトドロップ両方でプリ回転を適用させたい。この位置は自然落下の条件なので不適切
                 // buffered rotation: spawn前に押された回転を一度だけ適用
-//                if (cfg.enableBufferedRotation && this._bufferedRotateDir && !this._bufferedRotationApplied) {
-//                    this.rotateBlock(this._bufferedRotateDir);
-//                    this._bufferedRotationApplied = true;
-//                    this._bufferedRotateDir = 0;
-//                }
+                //一段ブロックが落ちてから回転、が実装されていないだろう。出現直後に回転して回らないのが現状のハズ。現状認識から。    
+                if (cfg.enableBufferedRotation && this._bufferedRotateDir && !this._bufferedRotationApplied && steps>0) {
+                    if(this.rotateBlock(this._bufferedRotateDir)){
+                        this._bufferedRotationApplied = true;   //falseが定位
+                        this._bufferedRotateDir=0;              //回転方向初期化
+                        //ここで統計窓に何回この「ワザ」がうまくいったか出力
+                        EventBus.emit('bufferedRotationSuccess');
+                    }
+                }
             }
         } else {
             this.moveBlockDown(cfg.SOFT_DROP_FRAME);
@@ -399,10 +409,10 @@ export default class GameplayScene extends Scene {
     /* -------- SPAWNING -------- */
     updateSpawning(dt) {
         // Buffered rotation input before spawn　これはOKそう
-//        if (this.cfg.enableBufferedRotation) {
-//            if (window.input.isPressed(ACTIONS.ROTATE_L)) this._bufferedRotateDir = -1;
-//            if (window.input.isPressed(ACTIONS.ROTATE_R)) this._bufferedRotateDir = 1;
-//        }
+        if (this.cfg.enableBufferedRotation) {
+            if (window.input.isPressed(ACTIONS.ROTATE_L)) this._bufferedRotateDir = -1;
+            if (window.input.isPressed(ACTIONS.ROTATE_R)) this._bufferedRotateDir = 1;
+        }
         const s = this.state, cfg = this.cfg;
         s.phaseTimer += dt;
         this.handleHorizontalMove(dt);
@@ -489,24 +499,28 @@ export default class GameplayScene extends Scene {
         const next = (dir === 1) ? (b.rotationIndex + 3) & 3 : (b.rotationIndex + 1) & 3;
         const old = b.shape;
         b.shape = JSON.parse(JSON.stringify(tet.shapes[next]));
-        if (this.isCollision()) b.shape = old;
-        else { b.rotationIndex = next; soundManager.play('rotate', { volume: 0.3 }); }
+        if (this.isCollision()){ 
+            b.shape = old; return false; //回転失敗
+        }else{ 
+            b.rotationIndex = next; soundManager.play('rotate', { volume: 0.3 });
+            return true; //回転成功
+        }
     }
 
     moveBlockDown(step = 1) {
         const b = this.state.currentBlock;
+        const cfg = this.cfg;
         for (let i = 0; i < step; i++) {
 
-       //自然落下、ソフトドロップ両方でプリ回転を適用させたい。この位置は自然落下の条件なので不適切
-                // buffered rotation: spawn前に押された回転を一度だけ適用
-//                if (cfg.enableBufferedRotation && this._bufferedRotateDir && !this._bufferedRotationApplied) {
-//                   this.rotateBlock(this._bufferedRotateDir);
-//                   this._bufferedRotationApplied = true;
-//                   this._bufferedRotateDir = 0;
-//                }
-
             b.row++;
-            if (this.isCollision()) { b.row--; return false; }
+            if (this.isCollision()) { 
+                b.row--;
+                return false; 
+            }else{
+                //削除対象か？？？ココでPre回転を入れるのは違う気がしてきた    
+            }
+
+
 
         }
         return true;

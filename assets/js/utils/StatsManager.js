@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * StatsManager: Collects and provides game statistics via EventBus events.
  *
@@ -23,6 +24,7 @@ class StatsManagerClass {
         this.dropCount = 0;
         this.totalLinesCleared = 0;
         this.lineClearCounts = {1: 0, 2: 0, 3: 0, 4: 0};
+        this.bufferedRotationCount = 0;
         this._inited = false;
     }
 
@@ -41,6 +43,9 @@ class StatsManagerClass {
                 this.lineClearCounts[n]++;
             }
         });
+        EventBus.on('bufferedRotationSuccess', () => {
+            this.bufferedRotationCount++;
+        });
         this._inited = true;
     }
 
@@ -48,17 +53,19 @@ class StatsManagerClass {
         this.dropCount = 0;
         this.totalLinesCleared = 0;
         this.lineClearCounts = {1: 0, 2: 0, 3: 0, 4: 0};
+        this.bufferedRotationCount = 0;
     }
 
     /**
      * Get a snapshot of current statistics.
-     * @returns {{dropCount: number, totalLinesCleared: number, lineClearCounts: object}}
+     * @returns {{dropCount: number, totalLinesCleared: number, lineClearCounts: object, bufferedRotationCount: number}}
      */
     getStats() {
         return {
             dropCount: this.dropCount,
             totalLinesCleared: this.totalLinesCleared,
-            lineClearCounts: { ...this.lineClearCounts }
+            lineClearCounts: { ...this.lineClearCounts },
+            bufferedRotationCount: this.bufferedRotationCount
         };
     }
 }

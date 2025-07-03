@@ -29,7 +29,8 @@ class StatsView extends ViewBase {
             1行消去数: ${s.lineClearCounts[1] ?? 0}<br>
             2行消去数: ${s.lineClearCounts[2] ?? 0}<br>
             3行消去数: ${s.lineClearCounts[3] ?? 0}<br>
-            4行消去数: ${s.lineClearCounts[4] ?? 0}
+            4行消去数: ${s.lineClearCounts[4] ?? 0}<br>
+            プリ回転成功数: ${s.bufferedRotationCount}
         `;
         this._diffRender(html);
     }
