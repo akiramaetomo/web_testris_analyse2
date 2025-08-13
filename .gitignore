@@ -1,15 +1,183 @@
+# Project-specific directories and files
 dummy/
 analysis/
-.vscode
 .crossnote
-node_modules/
 
-#class関係解析スクリプト
-#基本はanalysis/に格納しておく
+# Development tools and workspaces
+.vscode/
+web_testris_dev.code-workspace
+
+# Node.js dependencies and package files
+node_modules/
+package.json
+package-lock.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Project analysis scripts (基本はanalysis/に格納しておく)
 extract_meta.js
 meta.md
 meta.pdf
 
-web_testris_dev.code-workspace
-package.json
-package-lock.json
+# ===== STANDARD GITIGNORE PATTERNS =====
+
+# OS-specific files
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# Editor and IDE files
+# Visual Studio Code (extended)
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# JetBrains IDEs
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+.netrwhist
+
+# Atom
+.atom/
+
+# Node.js and JavaScript (extended)
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Parcel bundler cache
+.cache
+.parcel-cache
+
+# Build frameworks
+.next
+.nuxt
+dist/
+build/
+
+# Serverless directories
+.serverless/
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# Build outputs and compiled files
+out/
+target/
+*.min.js
+*.min.css
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Logs
+logs/
+*.log
+
+# Temporary files and cache
+tmp/
+temp/
+*.tmp
+*.temp
+*.cache
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Security-sensitive files
+*.pem
+*.key
+*.p12
+*.pfx
+config/secrets.yml
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Archive files (optional - uncomment if needed)
+# *.zip
+# *.tar.gz
+# *.rar
+# *.7z
