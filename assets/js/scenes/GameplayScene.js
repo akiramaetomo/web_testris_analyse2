@@ -245,7 +245,7 @@ export default class GameplayScene extends Scene {
         // buffered rotation: バッファ回転適用済フラグ初期化
         this._bufferedRotationApplied = false;
 
-        console.log('spawnBlock:', 'enableBufferedRotation=', this.cfg.enableBufferedRotation, 'bufferedRotateDir=', this._bufferedRotateDir, 'bufferedApplied=', this._bufferedRotationApplied);
+//        console.log('spawnBlock:', 'enableBufferedRotation=', this.cfg.enableBufferedRotation, 'bufferedRotateDir=', this._bufferedRotateDir, 'bufferedApplied=', this._bufferedRotationApplied);
 
         this.state.blockFixed = false;       // フラグ解除
         this.state.currentBlock = this.nextBlock;
