@@ -19,7 +19,8 @@
 export class SoundManager {
     constructor() {
         /* ---------- 基本 ---------- */
-        this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+//        this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        this.audioCtx = new (window.AudioContext || window['webkitAudioContext'])();
         this.buffers = {};      // { name : AudioBuffer }
         this.sources = {};      // { name : [AudioBufferSourceNode …] }
 

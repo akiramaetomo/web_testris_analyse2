@@ -24,14 +24,16 @@
 export class SceneManager {
     /**
      * @param {Function} sceneFactory  シーンを生成するファクトリ関数(createScene)
-     * @param {string|object} initial  最初に表示するシーン名またはインスタンス
+     * @param {string|object|null} initial  最初に表示するシーン名またはインスタンス（nullの場合は初期化しない）
      * @param {AppRoot} appRoot        AppRoot のインスタンス
      */
     constructor(sceneFactory, initial, appRoot) {
         this._stack = [];
         this.app = appRoot;
         this.createScene = sceneFactory;
-        this.changeTo(initial);
+        if (initial !== null) {
+            this.changeTo(initial);
+        }
     }
 
     /** 現在のシーンを置き換える */
@@ -75,8 +77,16 @@ export class SceneManager {
     }
 
     /** 毎フレーム呼び出す共通 API */
-    update(dt) { this._stack[this._stack.length - 1].update(dt); }
-    draw(ctx) { this._stack[this._stack.length - 1].draw(ctx); }
+    update(dt) { 
+        if (this._stack.length > 0) {
+            this._stack[this._stack.length - 1].update(dt); 
+        }
+    }
+    draw(ctx) { 
+        if (this._stack.length > 0) {
+            this._stack[this._stack.length - 1].draw(ctx); 
+        }
+    }
 
     /**
      * Returns the current active scene.
