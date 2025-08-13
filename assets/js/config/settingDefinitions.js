@@ -32,7 +32,8 @@ export const SETTING_DEFINITIONS = [
             { label: 'default', value: 'bgm_play' },
             { label: 'TB303-1', value: 'bgm_play2' },
             { label: 'TB303-2', value: 'bgm_play3' },
-            { label: 'TB303-3', value: 'bgm_play4' }
+            { label: 'TB303-3', value: 'bgm_play4' },
+            { label: 'zocks101', value: 'bgm_play_azc1' }
         ],
         defaultIndex: 0
     },
@@ -67,5 +68,6 @@ export const BGM_PATHS = {
     bgm_over: './assets/audio/bgm_over.wav',
     bgm_play2: './assets/audio/bgm_play2.wav',
     bgm_play3: './assets/audio/bgm_play3.wav',
-    bgm_play4: './assets/audio/bgm_play4.wav'
+    bgm_play4: './assets/audio/bgm_play4.wav',
+    bgm_play_azc1: '/assets/audio/x0x-101_01.MP3'
 };
