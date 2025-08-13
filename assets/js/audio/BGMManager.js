@@ -37,10 +37,17 @@ export class BGMManager {
      * @param {string} trackKey - 登録済みトラックのキー
      */
     play(trackKey) {
+        // まず登録済みトラックをチェック
         if (!this.tracks[trackKey]) {
-            console.warn(`BGMManager: Unknown trackKey "${trackKey}"`);
-            return;
+            // 登録されていない場合、soundManagerに直接問い合わせ
+            if (!soundManager.buffers[trackKey]) {
+                console.warn(`BGMManager: Unknown trackKey "${trackKey}" - not found in tracks or soundManager`);
+                return;
+            }
+            // soundManagerにはあるが未登録の場合は情報レベルでログ出力
+            console.info(`BGMManager: Playing unregistered trackKey "${trackKey}" (found in soundManager)`);
         }
+        
         // 既存のBGMを停止
         if (this.currentTrack) {
             soundManager.stop(this.currentTrack);

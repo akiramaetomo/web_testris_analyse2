@@ -69,5 +69,5 @@ export const BGM_PATHS = {
     bgm_play2: './assets/audio/bgm_play2.wav',
     bgm_play3: './assets/audio/bgm_play3.wav',
     bgm_play4: './assets/audio/bgm_play4.wav',
-    bgm_play_azc1: '/assets/audio/x0x-101_01.MP3'
+    bgm_play_azc1: './assets/audio/x0x-101_01.MP3'
 };

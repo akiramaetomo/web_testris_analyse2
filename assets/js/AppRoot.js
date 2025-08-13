@@ -42,7 +42,7 @@ export class AppRoot {
         // そのインスタンス (`sceneFactory`) に束縛（bind）して関数化
         // `bind` しないと、`this` が失われて正しく動作しないため必須
         //第一引数をclass受けする方法もあるがひとまずこのまま。mae
-        this.scenes = new SceneManager(sceneFactory.createScene.bind(sceneFactory), 'title', this);
+        this.scenes = new SceneManager(sceneFactory.createScene.bind(sceneFactory), null, this);
 
         /* 統計・表示・壁紙 */
         this.statsMgr = StatsManager;       // 既存シングルトンを転用
@@ -79,7 +79,6 @@ export class AppRoot {
         /* BGMManager 初期化 */
         this.initTasks.register('InitBGMManager', async () => {
             await this.bgmMgr.init(BGM_PATHS);
-            this.bgmMgr.play('bgm_init', { loop: true });
         });
 
         /* StatsManager 初期化 */
@@ -121,6 +120,9 @@ export class AppRoot {
     async start() {
         await this.initTasks.init();
 
+        // 初期化完了後にタイトルシーンを開始
+        this.scenes.changeTo('title');
+
         let lastStatsHTML = "";
         this.engine.start((dt) => {
             this.perfStats.begin();
@@ -131,7 +133,7 @@ export class AppRoot {
 
             /* 情報／デバッグ表示 */
             const scene = this.scenes.getCurrentScene();
-            if (scene.state?.cfg) {
+            if (scene?.state?.cfg) {
                 this.displayMgr.render(scene.state);
                 lastStatsHTML = document.getElementById('statsArea').innerHTML;
             } else {
